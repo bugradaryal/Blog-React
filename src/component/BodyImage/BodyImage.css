@@ -1,0 +1,39 @@
+.liste{
+    margin: 5px;
+    display: flex;
+    flex-direction: column;
+    background-color: rgba(215, 215, 215, 0.4);
+    height: "100%";
+    width: 23%;
+    border-radius: 30px;
+    padding: 30px;
+    word-wrap:break-word;
+}
+
+hr{
+    width: 100%;
+    border: 0;
+    border-top: 3px solid black;  /* Çizgiyi göstermek için border-top kullanın */
+    margin: 20px 0; /* Üst ve alt boşluklar */
+}
+
+
+.imageclass{
+    width: 230px;
+    height: 150px;
+    border-radius: 5px;
+    border-radius: 5px;
+}
+
+.paragraph{
+    text-indent: 0.5em;
+}
+.paragraph:before {
+    content:"• ";
+}
+
+.likecomment{
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+}

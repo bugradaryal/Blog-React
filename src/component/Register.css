@@ -1,0 +1,14 @@
+.registerbody{
+    display: flex;
+    flex-direction: column;
+    width: 45%;
+    position: relative;
+    background-color:rgb(213, 213, 213);
+    padding: 75px;
+    border-radius: 5px;
+    height: 100%;
+}
+
+.registerbody div {
+    margin-top: 15px;
+}

@@ -1,0 +1,30 @@
+.Main {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+
+
+  .mybody{
+    display: flex;
+    flex-direction: row;
+    margin: 10px;
+    margin-top: 50px;
+    justify-content: center;
+    flex-wrap: wrap;
+    width: 90%;
+    align-self: center;
+  }
+  
+  .headercomponent{
+    width: 88%;
+    align-self: center;
+  }
+
+  .hometitle{
+    width: 100%;
+    background-color: rgba(215, 215, 215, 0.4);
+    border-radius: 10px;
+    padding: 3px;
+    padding-left: 20px;
+  }

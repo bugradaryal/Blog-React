@@ -1,9 +1,7 @@
-import logo from './logo.svg';
 import './App.css';
-import Login from './component/page/Login';
-import Register from './component/page/Register';
-import { Route } from 'react-router-dom';
-import { Router, Routes, useNavigate } from 'react-router-dom';  // Import the useNavigate hook
+import Login from './component/page/Login/Login';
+import Register from './component/page/Register/Register';
+import { Route, Routes, useNavigate } from 'react-router-dom'; 
 import HomePage from './component/page/HomePage/HomePage';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
@@ -14,8 +12,6 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
 import React, { useState } from 'react';
 import DehazeIcon from '@mui/icons-material/Dehaze';
 import HomeIcon from '@mui/icons-material/Home';
@@ -25,6 +21,13 @@ import CallIcon from '@mui/icons-material/Call';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import PostAddIcon from '@mui/icons-material/PostAdd';
+import AboutUs from './component/page/AboutUs/AboutUs';
+import Link from '@mui/material/Link';
+import GitHubIcon from '@mui/icons-material/GitHub';
+import FaceIconM from '@mui/icons-material/Face';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import EmailVerification from './component/page/EmailVerification/EmailVerification';
+import ContactUs from './component/page/ContactUs/ContactUs';
 
 function App() {
   const navigate = useNavigate();
@@ -41,8 +44,8 @@ function App() {
               // Sayfa geçişi yapılır
               if (text === 'Home') navigate('/');
               if (text === 'Login') navigate('./Login'); // Gerekirse yeni bir sayfa ekleyin
-              if (text === 'Send email') navigate('/send-email'); // Gerekirse yeni bir sayfa ekleyin
-              if (text === 'Drafts') navigate('/drafts'); // Gerekirse yeni bir sayfa ekleyin
+              if (text === 'About Us') navigate("/AboutUs");
+              if (text === 'Contact Us') navigate('/ContactUs'); // Gerekirse yeni bir sayfa ekleyin
             }}>
               <ListItemIcon>
 {index % 4 === 0 ? <HomeIcon /> : index % 4 === 1 ? <LoginIcon /> : index % 4 === 2 ? <AutoAwesomeMotionIcon /> : <CallIcon />}
@@ -74,17 +77,27 @@ function App() {
         <Drawer open={open} onClose={toggleDrawer(false)}>
           {DrawerList}
         </Drawer>
-        <div className='loginregister'>
-          <button className='btn btn-primary' onClick={() => navigate("./Login")}>Login</button>
-          <button className='btn btn-danger' onClick={() => navigate("./Register")}>Register</button>   
+        <div className='profile'>
+          <Button variant='text' style={{color:"black"}}><KeyboardArrowDownIcon/></Button>
+          <FaceIconM style={{ fontSize: '2.5rem' }}/>
          </div>
       </div>
       <div className='mybody'>
         <Routes>
           <Route path='/' element={<HomePage/>} />
           <Route path='/Login' element={<Login/>} />     
-          <Route path='/Register' element={<Register/>} />
+          <Route path='/Register' element={<Register/>}/>
+          <Route path='/EmailVerification' element={<EmailVerification/>}/>
+          <Route path='/AboutUs' element={<AboutUs/>}/>
+          <Route path='/ContactUs' element={<ContactUs/>}/>
         </Routes>
+      </div>
+      <div className='copyright'>
+          <b>	CopyRight &copy;2024 Buğra Daryal</b>
+          <div className='github'>
+            <GitHubIcon/>
+            <Link target="_blank" sx={{color:"black"}} href="https://github.com/bugradaryal" underline="hover">github.com/bugradaryal</Link>
+          </div>
       </div>
     </div>
   );

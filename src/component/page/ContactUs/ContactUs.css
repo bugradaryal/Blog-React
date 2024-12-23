@@ -1,0 +1,44 @@
+html, body{
+    height: 100%;
+    margin: 0;
+}
+
+.contactcontainer{
+    min-height: 100vh; /* Sayfanın tamamını kapsar */
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.contactbody{
+    background-color: rgb(213, 213, 213);
+    background-image: -webkit-linear-gradient(30deg, rgb(247, 247, 247) 50%, white 50%);
+    width: 80%;
+    height: 100%;
+    border-radius: 5px;
+    padding: 3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+}
+
+.contactcloums{
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    width: 50%;
+}
+
+.contacttext{
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    gap: 1.5rem;
+}
+
+.contactcontent
+{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}

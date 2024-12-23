@@ -23,7 +23,7 @@ const BodyImage = ({name,image,content}) => {
                 <p className='paragraph'>{ContentSubString(content)}</p>
             </div>
             <div>
-            <button type="button" class="btn btn-primary">Read</button>
+                <button type="button" class="btn btn-primary">Read</button>
             </div>
             <hr></hr>
             <div className='likecomment'>

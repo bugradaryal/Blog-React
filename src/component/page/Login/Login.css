@@ -1,0 +1,43 @@
+html, body{
+    height: 100%;
+    margin: 0;
+}
+
+.logincontainer{
+    min-height: 100vh; /* Sayfanın tamamını kapsar */
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.loginbody{
+    display: flex;
+    flex-direction: column;
+    width: 40%;
+    position: relative;
+    background-color: rgb(213, 213, 213);
+    background-image: -webkit-linear-gradient(30deg, rgb(247, 247, 247) 50%, white 50%);
+    padding: 3rem;
+    border-radius: 5px;
+    height: 100%;
+    gap: 2rem;
+}
+
+.loginTitle{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.logininputs{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1rem;
+}
+.loginbutton{
+    width: 8rem;
+    height: 3rem;
+    margin-top: 2rem;
+}

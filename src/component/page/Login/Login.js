@@ -9,43 +9,58 @@ import axios from 'axios';
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
+    const [message, setmessage] = useState('');
     const navigate = useNavigate();
 
     const handleLogin = async (e) => {
         e.preventDefault();
-        setError('');
+        setmessage('');
     
         try {
           const response = await axios.post('https://localhost:7197/api/Auth/Login', {
             email,
             password,
+            headers: {
+              'Content-Type': 'application/json',
+            },
           });
-          console.log('Login successful:', response.data);
-    
+          
+          let jwtToken = response.headers['authorization'];  // Küçük harf ile 'jwttoken'
+          const refreshToken = response.headers['refreshtoken']; // Küçük harf ile 'refreshtoken'
+
+          if (jwtToken && refreshToken) {
+              // Token'ları localStorage'a kaydet
+              jwtToken = jwtToken.replace('Bearer ', '');
+              localStorage.setItem('jwtToken', jwtToken);
+              localStorage.setItem('refreshToken', refreshToken);
+            } else {
+              console.error('Tokenlar alınamadı.');
+              navigate('/Login');
+            }
           // Başarılı giriş sonrası yönlendirme
+          console.log('Login successful:', response.data);
           navigate('/');
         } catch (err) {
           console.error('Login error:', err);
-          setError(err.response?.data?.message || 'Login failed. Please try again.');
+          setmessage(err.response?.data?.message || 'Login failed. Please try again.');
         }
       };
     return (
         <div className='logincontainer'>
-            <div className='loginbody'>
+            <form className='loginbody' onSubmit={handleLogin}>
                 <div className='loginTitle'>
                     <BookIcon style={{ fontSize: '2.6rem' }}/>
                     <p className='h1'> Login</p>
                     <hr style={{height:"0px", border:"none", borderTop:"4px solid black", borderRadius:"3rem", width:"50%"}}></hr>
                 </div>
                 <div className='logininputs'>
-                <TextField onChange={(e) => setEmail(e.target.value)} type='email' value={email} label="Email" variant="standard" />
-                <TextField onChange={(e) => setPassword(e.target.value)} type='password' value={password} label="Password" variant="standard" />
-                {error && <p className="error-message" style={{ color: 'red' }}>{error}</p>}
+                <TextField onChange={(e) => setEmail(e.target.value)} type='email' value={email} label="Email" variant="standard" required />
+                <TextField onChange={(e) => setPassword(e.target.value)} type='password' value={password} label="Password" variant="standard" required />
+                {message && <p className="error-message" style={{ color: 'red' }}>{message}</p>}
                 </div>
-                <Button type='submit' onClick={handleLogin} className='loginbutton' variant="contained">Login</Button>
+                <Button type='submit' className='loginbutton' variant="contained">Login</Button>
                 <b>You don't have account?<button onClick={() => navigate('/Register')}  className='btn btn-link'>Register now</button></b>
-            </div>
+            </form>
         </div>
     );
 };

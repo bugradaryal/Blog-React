@@ -29,12 +29,23 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import EmailVerification from './component/page/EmailVerification/EmailVerification';
 import ContactUs from './component/page/ContactUs/ContactUs';
 
+import User from './models/User';
+import Post from './models/Post';
+
+
 function App() {
+
+  
+  const [user, setuser] = useState('');
+  const [role, setrole] = useState('');
+  const [message, setmessage] = useState('');
   const navigate = useNavigate();
   const [open, setOpen] = useState(false); // 'setOpen' burada tanımlanır
   const toggleDrawer = (newOpen) => () => {
     setOpen(newOpen);
   };
+
+
   const DrawerList = (
     <Box sx={{ width: 250 }} role="presentation" onClick={toggleDrawer(false)}>
       <List>

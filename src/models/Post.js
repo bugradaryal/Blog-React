@@ -1,8 +1,10 @@
 class Post {
-    constructor(id, title, content) {
+    constructor(id, Title, Content, Date, Image) {
       this.id = id;
-      this.title = title;
-      this.content = content;
+      this.Title = Title;
+      this.Content = Content;
+      this.Date = Date;
+      this.Image = Image;
     }
   }
   

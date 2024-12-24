@@ -28,15 +28,13 @@ import FaceIconM from '@mui/icons-material/Face';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import EmailVerification from './component/page/EmailVerification/EmailVerification';
 import ContactUs from './component/page/ContactUs/ContactUs';
-
 import User from './models/User';
 import Post from './models/Post';
-
+import axios from 'axios';
 
 function App() {
-
-  
   const [user, setuser] = useState('');
+  const [Post, setpost] = useState('');
   const [role, setrole] = useState('');
   const [message, setmessage] = useState('');
   const navigate = useNavigate();
@@ -44,7 +42,30 @@ function App() {
   const toggleDrawer = (newOpen) => () => {
     setOpen(newOpen);
   };
+  const HandleOnLoading = async (e) => {
+    e.preventDefault();
+    setmessage('');
 
+    const apiClient = axios.create({
+      baseURL: "https://localhost:7197/api", // API'nin base URL'i
+      timeout: 5000, // Timeout süresi
+    });
+
+    apiClient.interceptors.request.use(
+      (config) => {
+        // Eğer Authorization header'ı yoksa, localStorage'dan token al ve ekle
+        if (!config.headers.Authorization) {
+          const token = localStorage.getItem("authorization");
+          if (token) {
+            config.headers.Authorization = `Bearer ${token}`;
+          }
+        }
+        return config;
+      },
+      (error) => {
+        return Promise.reject(error);
+      }
+    );
 
   const DrawerList = (
     <Box sx={{ width: 250 }} role="presentation" onClick={toggleDrawer(false)}>
@@ -59,7 +80,7 @@ function App() {
               if (text === 'Contact Us') navigate('/ContactUs'); // Gerekirse yeni bir sayfa ekleyin
             }}>
               <ListItemIcon>
-{index % 4 === 0 ? <HomeIcon /> : index % 4 === 1 ? <LoginIcon /> : index % 4 === 2 ? <AutoAwesomeMotionIcon /> : <CallIcon />}
+                  {index % 4 === 0 ? <HomeIcon /> : index % 4 === 1 ? <LoginIcon /> : index % 4 === 2 ? <AutoAwesomeMotionIcon /> : <CallIcon />}
               </ListItemIcon>
               <ListItemText primary={text} />
             </ListItemButton>
@@ -112,6 +133,6 @@ function App() {
       </div>
     </div>
   );
+  }
 }
-
 export default App;

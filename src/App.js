@@ -12,7 +12,7 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import DehazeIcon from '@mui/icons-material/Dehaze';
 import HomeIcon from '@mui/icons-material/Home';
 import LoginIcon from '@mui/icons-material/Login';
@@ -28,17 +28,21 @@ import FaceIconM from '@mui/icons-material/Face';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import EmailVerification from './component/page/EmailVerification/EmailVerification';
 import ContactUs from './component/page/ContactUs/ContactUs';
+import axios from 'axios';
 import User from './models/User';
 import Post from './models/Post';
-import axios from 'axios';
 
 function App() {
-  const [user, setuser] = useState('');
-  const [Post, setpost] = useState('');
+  const [user, setuser] = useState(new User('', ''));
+  const [post, setpost] = useState(new Post('', ''));
   const [role, setrole] = useState('');
   const [message, setmessage] = useState('');
   const navigate = useNavigate();
   const [open, setOpen] = useState(false); // 'setOpen' burada tanımlanır
+  useEffect(() => {
+    // HandleOnLoading fonksiyonunu burada çağırın
+    HandleOnLoading();
+  }, []);
   const toggleDrawer = (newOpen) => () => {
     setOpen(newOpen);
   };
@@ -51,13 +55,70 @@ function App() {
       timeout: 5000, // Timeout süresi
     });
 
+    const getTokenByRefleshToken = async(config) => {
+      try{
+        if (!config.headers.refleshtoken) {
+          const refleshtoken = localStorage.getItem("refreshtoken");
+          if(!refleshtoken){
+            navigate('/Login');
+            throw new Error("Reflesh Token cant be finded!!");
+          }
+          config.headers.refleshtoken = refleshtoken;
+        }
+        const response = await axios.post("https://localhost:7197/api/Auth/RefreshToken",{
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        if(response.status === 200){
+          const jwtToken = response.headers['authorization']; 
+          const refreshToken = response.headers['refreshtoken'];
+          if (jwtToken && refreshToken) {
+            localStorage.setItem('jwtToken', jwtToken);
+            localStorage.setItem('refreshToken', refreshToken);
+          } else {
+            console.error('Cant get token!');
+            navigate('/Login');
+          }
+        }
+        else{
+          localStorage.removeItem("refreshToken");
+          if (config.headers.refleshtoken) {
+            delete config.headers.refleshtoken; // Header'ı silme işlemi
+          }
+          console.error('Reflesh Token not valid!!');
+          navigate('/Login');
+        }
+      }
+      catch(error){
+        console.error(error);
+      }
+
+    }
+
+
     apiClient.interceptors.request.use(
-      (config) => {
+      async (config) => {
         // Eğer Authorization header'ı yoksa, localStorage'dan token al ve ekle
         if (!config.headers.Authorization) {
           const token = localStorage.getItem("authorization");
           if (token) {
-            config.headers.Authorization = `Bearer ${token}`;
+            config.headers.Authorization = token;
+          }
+          else{
+            await getTokenByRefleshToken(config);
+          }
+        }
+        const response = axios.post("https://localhost:7197/api/Auth/ValidateToken", {
+          user,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        if(!response.status === 200){
+          localStorage.removeItem("authorization");
+          if (config.headers.Authorization) {
+            delete config.headers.Authorization; // Header'ı silme işlemi
           }
         }
         return config;
@@ -66,7 +127,7 @@ function App() {
         return Promise.reject(error);
       }
     );
-
+  }
   const DrawerList = (
     <Box sx={{ width: 250 }} role="presentation" onClick={toggleDrawer(false)}>
       <List>
@@ -133,6 +194,5 @@ function App() {
       </div>
     </div>
   );
-  }
 }
 export default App;

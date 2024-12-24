@@ -25,12 +25,11 @@ const Login = () => {
             },
           });
           
-          let jwtToken = response.headers['authorization'];  // Küçük harf ile 'jwttoken'
+          const jwtToken = response.headers['authorization'];  // Küçük harf ile 'jwttoken'
           const refreshToken = response.headers['refreshtoken']; // Küçük harf ile 'refreshtoken'
 
           if (jwtToken && refreshToken) {
               // Token'ları localStorage'a kaydet
-              jwtToken = jwtToken.replace('Bearer ', '');
               localStorage.setItem('jwtToken', jwtToken);
               localStorage.setItem('refreshToken', refreshToken);
             } else {

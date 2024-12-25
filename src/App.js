@@ -31,6 +31,7 @@ import ContactUs from './component/page/ContactUs/ContactUs';
 import axios from 'axios';
 import User from './models/User';
 import Post from './models/Post';
+import { jwtDecode } from 'jwt-decode';
 
 function App() {
   const [user, setuser] = useState(new User('', ''));
@@ -39,95 +40,128 @@ function App() {
   const [message, setmessage] = useState('');
   const navigate = useNavigate();
   const [open, setOpen] = useState(false); // 'setOpen' burada tanımlanır
+  const [loading, setLoading] = useState(true);
+
+  const apiClient = axios.create({
+    baseURL: "https://localhost:7197/api", // API'nin base URL'i
+    timeout: 5000, // Timeout süresi
+    headers: {"Content-Type":"application/json"}
+  });
+
+  function isTokenExpired(token) {
+    try {
+      const decoded = jwtDecode(token);  // Token'ı çözümle
+      const expirationDate = decoded.exp * 1000;  // Exp tarihini milisaniyeye çevir
+      return expirationDate < Date.now();  // Exp tarihinin geçmiş olup olmadığını kontrol et
+    } catch (error) {
+      console.error('Geçersiz token:', error);
+      return true;  // Eğer token geçersizse, expired olarak kabul edebiliriz
+    }
+  }
   useEffect(() => {
-    // HandleOnLoading fonksiyonunu burada çağırın
-    HandleOnLoading();
+    setLoading(true);
+    apiClient.get('/Post/GetAllPosts')
+      .then(response => {
+        setpost(response.data);
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+      })
   }, []);
   const toggleDrawer = (newOpen) => () => {
     setOpen(newOpen);
   };
-  const HandleOnLoading = async (e) => {
-    e.preventDefault();
-    setmessage('');
 
-    const apiClient = axios.create({
-      baseURL: "https://localhost:7197/api", // API'nin base URL'i
-      timeout: 5000, // Timeout süresi
-    });
-
-    const getTokenByRefleshToken = async(config) => {
-      try{
-        if (!config.headers.refleshtoken) {
-          const refleshtoken = localStorage.getItem("refreshtoken");
-          if(!refleshtoken){
-            navigate('/Login');
-            throw new Error("Reflesh Token cant be finded!!");
-          }
-          config.headers.refleshtoken = refleshtoken;
-        }
-        const response = await axios.post("https://localhost:7197/api/Auth/RefreshToken",{
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-        if(response.status === 200){
-          const jwtToken = response.headers['authorization']; 
-          const refreshToken = response.headers['refreshtoken'];
-          if (jwtToken && refreshToken) {
-            localStorage.setItem('jwtToken', jwtToken);
-            localStorage.setItem('refreshToken', refreshToken);
-          } else {
-            console.error('Cant get token!');
-            navigate('/Login');
-          }
-        }
-        else{
-          localStorage.removeItem("refreshToken");
-          if (config.headers.refleshtoken) {
-            delete config.headers.refleshtoken; // Header'ı silme işlemi
-          }
-          console.error('Reflesh Token not valid!!');
-          navigate('/Login');
-        }
-      }
-      catch(error){
-        console.error(error);
-      }
-
-    }
-
-
-    apiClient.interceptors.request.use(
-      async (config) => {
+  apiClient.interceptors.request.use(
+    async (config) => {
+      setmessage('');
         // Eğer Authorization header'ı yoksa, localStorage'dan token al ve ekle
-        if (!config.headers.Authorization) {
-          const token = localStorage.getItem("authorization");
-          if (token) {
-            config.headers.Authorization = token;
+          let token = localStorage.getItem("authorization"); 
+          console.log("first1")    
+          if (!token || isTokenExpired(token)) 
+          {        
+            console.log("first3")   
+            const refleshtoken = localStorage.getItem("refreshToken");
+            if(!refleshtoken)
+            {
+              console.log("first4")   
+              navigate('/Login');
+            }
+            else
+            {
+              console.log("first5"); 
+              let RefResponse = null; 
+              try{
+                RefResponse = await axios.post("https://localhost:7197/api/Auth/RefreshToken",
+                {},
+                {
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'RefreshToken': refleshtoken,
+                  },
+                }
+              );
+            }
+            catch(error){
+              console.log(error)
+            }
+              console.log("first5")
+              if(RefResponse && RefResponse.status === 200){
+                console.log("first6")   
+                const jwtToken = RefResponse.headers['authorization']; 
+                const refreshToken = RefResponse.headers['refreshtoken'];
+                if (jwtToken && refreshToken) 
+                {
+                  localStorage.setItem('authorization', jwtToken);
+                  localStorage.setItem('refreshToken', refreshToken);
+                  console.log("first7")   
+                } 
+                else
+                {
+                  console.error('Cant get token!');
+                  navigate('/Login');
+                  console.log("first8")   
+                }                
+              }
+              else{
+                console.log("first9")   
+                localStorage.removeItem("refreshToken");
+                console.error('Reflesh Token not valid!!');
+                navigate('/Login');
+              }
+            }         
+          } 
+          token = localStorage.getItem("authorization"); 
+          if(localStorage.getItem("authorization") ){
+            console.log("test")
+            let Authresponse = null;
+            try{
+              Authresponse = await axios.post("https://localhost:7197/api/Auth/ValidateToken",
+              {user},
+              {
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization' : token,
+                },
+              } 
+            );
+            }
+            catch(error){
+              console.log(error)
+            }
+            console.log(Authresponse)
+            if(!Authresponse.status === 200){
+              localStorage.removeItem("authorization");
+            }
+            console.log("first2")  
           }
-          else{
-            await getTokenByRefleshToken(config);
-          }
-        }
-        const response = axios.post("https://localhost:7197/api/Auth/ValidateToken", {
-          user,
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-        if(!response.status === 200){
-          localStorage.removeItem("authorization");
-          if (config.headers.Authorization) {
-            delete config.headers.Authorization; // Header'ı silme işlemi
-          }
-        }
-        return config;
+        return config; 
       },
       (error) => {
         return Promise.reject(error);
       }
     );
-  }
+  
   const DrawerList = (
     <Box sx={{ width: 250 }} role="presentation" onClick={toggleDrawer(false)}>
       <List>

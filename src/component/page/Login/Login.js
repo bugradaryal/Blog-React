@@ -25,12 +25,12 @@ const Login = () => {
             },
           });
           
-          const jwtToken = response.headers['authorization'];  // Küçük harf ile 'jwttoken'
+          const authorization = response.headers['authorization'];  // Küçük harf ile 'jwttoken'
           const refreshToken = response.headers['refreshtoken']; // Küçük harf ile 'refreshtoken'
 
-          if (jwtToken && refreshToken) {
+          if (authorization && refreshToken) {
               // Token'ları localStorage'a kaydet
-              localStorage.setItem('jwtToken', jwtToken);
+              localStorage.setItem('authorization', authorization);
               localStorage.setItem('refreshToken', refreshToken);
             } else {
               console.error('Tokenlar alınamadı.');

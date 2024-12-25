@@ -15,7 +15,7 @@ const BodyImage = ({name,image,content}) => {
                 <p className='h5'> {name}</p>
             </div>
             <hr></hr>
-            <div className='text-center'>
+            <div className='imagecontainer'>
                 <img className='imageclass' src= {'./images/' + image + '.jpg'} loading="lazy"/>    
             </div>
             <hr></hr>
@@ -23,7 +23,7 @@ const BodyImage = ({name,image,content}) => {
                 <p className='paragraph'>{ContentSubString(content)}</p>
             </div>
             <div>
-                <button type="button" class="btn btn-primary">Read</button>
+                <button type="button" className="btn btn-primary">Read</button>
             </div>
             <hr></hr>
             <div className='likecomment'>

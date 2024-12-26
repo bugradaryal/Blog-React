@@ -31,22 +31,28 @@ import ContactUs from './component/page/ContactUs/ContactUs';
 import axios from 'axios';
 import User from './models/User';
 import Post from './models/Post';
+import Like from './models/Like';
+import Comment from './models/Comment';
 import { jwtDecode } from 'jwt-decode';
+import Blog from './component/page/Blog/Blog';
 
 function App() {
   const [user, setuser] = useState(new User('', ''));
   const [post, setpost] = useState(new Post('', ''));
+  const [pageid, setpageid] = useState('1');
   const [role, setrole] = useState('');
   const [message, setmessage] = useState('');
   const navigate = useNavigate();
   const [open, setOpen] = useState(false); // 'setOpen' burada tanımlanır
   const [loading, setLoading] = useState(true);
 
+  /*
   const apiClient = axios.create({
     baseURL: "https://localhost:7197/api", // API'nin base URL'i
     timeout: 5000, // Timeout süresi
     headers: {"Content-Type":"application/json"}
   });
+*/
 
   function isTokenExpired(token) {
     try {
@@ -58,110 +64,104 @@ function App() {
       return true;  // Eğer token geçersizse, expired olarak kabul edebiliriz
     }
   }
+
+   const ValidateToken = async(token) => {
+    const Authresponse = await axios.post("https://localhost:7197/api/Auth/ValidateToken",
+      {},
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': token,
+        },
+      });
+      if(!Authresponse.status === 200 || Authresponse.error){
+        console.log("Token not valid!");
+        localStorage.removeItem("authorization");
+      } 
+      else{
+        const user = new User(Authresponse.data.user.id, Authresponse.data.user.userName, Authresponse.data.user.email);
+        setuser(user);
+        console.log(user);
+        console.log("Valid token. Done!")
+      }
+  }
+
+  const PostDataAxios = async() => {
+    const response = await axios.get("https://localhost:7197/api/Post/GetAllPosts", {
+      pageid
+    });
+    if (response && response.data && Array.isArray(response.data))
+    {
+      const posts = response.data.map(postData => {
+        const likes = postData.likes ? postData.likes.map(likeData => new Like(likeData.id, likeData.user_id, likeData.post_id)) : [];
+        const comments = postData.comments ? postData.comments.map(comData => new Comment(comData.id, comData.content)) : [];
+        return new Post(
+          postData.id,
+          postData.title,
+          postData.content,
+          postData.date,
+          postData.image,
+          likes,
+          comments
+        );
+      });
+      setpost(posts);
+      console.log(posts)
+    }
+  }
+
   useEffect(() => {
     setLoading(true);
-    apiClient.get('/Post/GetAllPosts')
-      .then(response => {
-        setpost(response.data);
-      })
-      .catch(error => {
-        console.error('Error fetching data:', error);
-      })
-  }, []);
+          const token = localStorage.getItem("authorization"); 
+          if(token && !isTokenExpired(token)){
+            console.log("Token exist!");
+            ValidateToken(token);
+          }
+          else{
+            console.log("Token not exist!")
+            const refleshtoken = localStorage.getItem("refreshToken");
+            if(refleshtoken)
+              {
+                console.log("Reflesh token exist!");
+                const RefResponse = axios.post("https://localhost:7197/api/Auth/RefreshToken",
+                  {},
+                  {
+                    headers: {
+                      'Content-Type': 'application/json',
+                      'RefreshToken': refleshtoken,
+                    },
+                  }
+                );
+                if(RefResponse && RefResponse.status === 200){  
+                  const jwtToken = RefResponse.headers['authorization']; 
+                  const refreshToken = RefResponse.headers['refreshtoken'];
+                  console.log("Reflesh token valid!");
+                  if (jwtToken && refreshToken) 
+                  {
+                    localStorage.setItem('authorization', jwtToken);
+                    localStorage.setItem('refreshToken', refreshToken); 
+                    console.log("Getting tokens. Done!");
+                  } 
+                  else
+                  {
+                    console.error('Cant get tokens!');
+                  }                
+                }
+                else{  
+                  localStorage.removeItem("refreshToken");
+                  console.error('Reflesh Token not valid!!');
+                }
+              }
+              else{
+                console.error('User must be login!');
+              }
+          }
+          PostDataAxios();
+      },[]);
   const toggleDrawer = (newOpen) => () => {
     setOpen(newOpen);
   };
 
-  apiClient.interceptors.request.use(
-    async (config) => {
-      setmessage('');
-        // Eğer Authorization header'ı yoksa, localStorage'dan token al ve ekle
-          let token = localStorage.getItem("authorization"); 
-          console.log("first1")    
-          if (!token || isTokenExpired(token)) 
-          {        
-            console.log("first3")   
-            const refleshtoken = localStorage.getItem("refreshToken");
-            if(!refleshtoken)
-            {
-              console.log("first4")   
-              navigate('/Login');
-            }
-            else
-            {
-              console.log("first5"); 
-              let RefResponse = null; 
-              try{
-                RefResponse = await axios.post("https://localhost:7197/api/Auth/RefreshToken",
-                {},
-                {
-                  headers: {
-                    'Content-Type': 'application/json',
-                    'RefreshToken': refleshtoken,
-                  },
-                }
-              );
-            }
-            catch(error){
-              console.log(error)
-            }
-              console.log("first5")
-              if(RefResponse && RefResponse.status === 200){
-                console.log("first6")   
-                const jwtToken = RefResponse.headers['authorization']; 
-                const refreshToken = RefResponse.headers['refreshtoken'];
-                if (jwtToken && refreshToken) 
-                {
-                  localStorage.setItem('authorization', jwtToken);
-                  localStorage.setItem('refreshToken', refreshToken);
-                  console.log("first7")   
-                } 
-                else
-                {
-                  console.error('Cant get token!');
-                  navigate('/Login');
-                  console.log("first8")   
-                }                
-              }
-              else{
-                console.log("first9")   
-                localStorage.removeItem("refreshToken");
-                console.error('Reflesh Token not valid!!');
-                navigate('/Login');
-              }
-            }         
-          } 
-          token = localStorage.getItem("authorization"); 
-          if(localStorage.getItem("authorization") ){
-            console.log("test")
-            let Authresponse = null;
-            try{
-              Authresponse = await axios.post("https://localhost:7197/api/Auth/ValidateToken",
-              {user},
-              {
-                headers: {
-                  'Content-Type': 'application/json',
-                  'Authorization' : token,
-                },
-              } 
-            );
-            }
-            catch(error){
-              console.log(error)
-            }
-            console.log(Authresponse)
-            if(!Authresponse.status === 200){
-              localStorage.removeItem("authorization");
-            }
-            console.log("first2")  
-          }
-        return config; 
-      },
-      (error) => {
-        return Promise.reject(error);
-      }
-    );
-  
   const DrawerList = (
     <Box sx={{ width: 250 }} role="presentation" onClick={toggleDrawer(false)}>
       <List>
@@ -211,7 +211,8 @@ function App() {
       </div>
       <div className='mybody'>
         <Routes>
-          <Route path='/' element={<HomePage/>} />
+          <Route path='/' element={<HomePage post={post} UserId={user.Id}/>} />
+          <Route path='/Blog' element={<Blog/>}/>
           <Route path='/Login' element={<Login/>} />     
           <Route path='/Register' element={<Register/>}/>
           <Route path='/EmailVerification' element={<EmailVerification/>}/>

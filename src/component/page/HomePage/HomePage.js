@@ -5,7 +5,10 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import SearchIcon from '@mui/icons-material/Search';
 
-const HomePage = () => {
+const HomePage = ({post,UserId}) => {
+  const posts = Array.isArray(post) 
+  ? post.map((x) => <BodyImage key={x.id} Title={x.Title} Image={x.Image} Content={x.Content.substr(0,220)} Like ={x.Like} UserId={UserId} CommentCount={x.Comment ? x.Comment.length : 0}/>) 
+  : <p>Loading...</p>;
     return (
       <div className="Main">
         <div className='hometitle'>
@@ -42,15 +45,8 @@ const HomePage = () => {
             </div>
           </div>
         </div>
-        <div className='mybody'>
-          <BodyImage name={"Dog"} image={"dog"} content={"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non varius erat. Phasellus vel tempor libero. Aliquam porta eleifend dolor ut iaculis. Duis leo justo, pharetra a mauris quis, viverra tincidunt neque. Vestibulum elementum, tellus nec accumsan vestibulum, augue tortor commodo sapien, sit amet tristique libero erat vel velit. "}/>
-          <BodyImage name={"Cat"} image={"cat"} content={"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non varius erat. Phasellus vel tempor libero. Aliquam porta eleifend dolor ut iaculis. Duis leo justo, pharetra a mauris quis, viverra tincidunt neque. Vestibulum elementum, tellus nec accumsan vestibulum, augue tortor commodo sapien, sit amet tristique libero erat vel velit. "}/>
-          <BodyImage name={"Bird"} image={"bird"} content={"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non varius erat. Phasellus vel tempor libero. Aliquam porta eleifend dolor ut iaculis. Duis leo justo, pharetra a mauris quis, viverra tincidunt neque. Vestibulum elementum, tellus nec accumsan vestibulum, augue tortor commodo sapien, sit amet tristique libero erat vel velit. "}/>
-          <BodyImage name={"Dog"} image={"dog"} content={"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non varius erat. Phasellus vel tempor libero. Aliquam porta eleifend dolor ut iaculis. Duis leo justo, pharetra a mauris quis, viverra tincidunt neque. Vestibulum elementum, tellus nec accumsan vestibulum, augue tortor commodo sapien, sit amet tristique libero erat vel velit. "}/>
-          <BodyImage name={"Cat"} image={"cat"} content={"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non varius erat. Phasellus vel tempor libero. Aliquam porta eleifend dolor ut iaculis. Duis leo justo, pharetra a mauris quis, viverra tincidunt neque. Vestibulum elementum, tellus nec accumsan vestibulum, augue tortor commodo sapien, sit amet tristique libero erat vel velit. "}/>
-          <BodyImage name={"Bird"} image={"bird"} content={"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non varius erat. Phasellus vel tempor libero. Aliquam porta eleifend dolor ut iaculis. Duis leo justo, pharetra a mauris quis, viverra tincidunt neque. Vestibulum elementum, tellus nec accumsan vestibulum, augue tortor commodo sapien, sit amet tristique libero erat vel velit. "}/>
-          <BodyImage name={"Dog"} image={"dog"} content={"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non varius erat. Phasellus vel tempor libero. Aliquam porta eleifend dolor ut iaculis. Duis leo justo, pharetra a mauris quis, viverra tincidunt neque. Vestibulum elementum, tellus nec accumsan vestibulum, augue tortor commodo sapien, sit amet tristique libero erat vel velit. "}/>
-          <BodyImage name={"Cat"} image={"cat"} content={"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non varius erat. Phasellus vel tempor libero. Aliquam porta eleifend dolor ut iaculis. Duis leo justo, pharetra a mauris quis, viverra tincidunt neque. Vestibulum elementum, tellus nec accumsan vestibulum, augue tortor commodo sapien, sit amet tristique libero erat vel velit. "}/>
+        <div className='mybody'> 
+          {posts}
         </div>
       </div>
     );

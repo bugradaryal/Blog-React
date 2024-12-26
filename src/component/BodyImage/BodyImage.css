@@ -44,3 +44,7 @@ hr{
     justify-content: space-between;
     flex-direction: row;
 }
+
+.likecount{
+    color: #3B71CA;
+}

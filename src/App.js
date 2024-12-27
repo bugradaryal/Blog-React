@@ -30,16 +30,11 @@ import EmailVerification from './component/page/EmailVerification/EmailVerificat
 import ContactUs from './component/page/ContactUs/ContactUs';
 import axios from 'axios';
 import User from './models/User';
-import Post from './models/Post';
-import Like from './models/Like';
-import Comment from './models/Comment';
 import { jwtDecode } from 'jwt-decode';
 import Blog from './component/page/Blog/Blog';
 
 function App() {
   const [user, setuser] = useState(new User('', ''));
-  const [post, setpost] = useState(new Post('', ''));
-  const [pageid, setpageid] = useState('1');
   const [role, setrole] = useState('');
   const [message, setmessage] = useState('');
   const navigate = useNavigate();
@@ -74,17 +69,17 @@ function App() {
             'Content-Type': 'application/json',
             'Authorization': token,
           },
+        }).then(response => {
+          if(!response.status === 200 || response.error){
+            console.log("Token not valid!");
+            localStorage.removeItem("authorization");
+          } 
+          else{
+            const user = new User(response.data.user.id, response.data.user.userName, response.data.user.email);
+            setuser(user);
+            console.log("Valid token. Done!")
+          }
         });
-        if(!Authresponse.status === 200 || Authresponse.error){
-          console.log("Token not valid!");
-          localStorage.removeItem("authorization");
-        } 
-        else{
-          const user = new User(Authresponse.data.user.id, Authresponse.data.user.userName, Authresponse.data.user.email);
-          setuser(user);
-          console.log(user);
-          console.log("Valid token. Done!")
-        }
     }
     catch(error){
       localStorage.removeItem("authorization");
@@ -92,33 +87,6 @@ function App() {
     }
   }
 
-  const PostDataAxios = async() => {
-    try{
-      const response = await axios.get("https://localhost:7197/api/Post/GetAllPosts", {
-        pageid
-      });
-      if (response && response.data && Array.isArray(response.data))
-      {
-        const posts = response.data.map(postData => {
-          const likes = postData.likes ? postData.likes.map(likeData => new Like(likeData.id, likeData.user_id, likeData.post_id)) : [];
-          const comments = postData.comments ? postData.comments.map(comData => new Comment(comData.id, comData.content, comData.userName)) : [];
-          return new Post(
-            postData.id,
-            postData.title,
-            postData.content,
-            postData.date,
-            postData.image,
-            likes,
-            comments
-          );
-        });
-        setpost(posts);
-      }
-    }
-    catch(error){
-      console.log("Cant get post resources!   -   "+error)
-    }
-  }
 
   useEffect(() => {
     setLoading(true);
@@ -165,7 +133,8 @@ function App() {
                   });
                 }
                 else{
-                  console.error('User must be login!');
+                  console.log("Reflesh token not exist!");
+                  console.log('User must be login!');
                 }
             }
             catch(error){
@@ -173,7 +142,6 @@ function App() {
               console.log("Cant get refleshtoken resources!   -   "+error);
             }
           }
-          PostDataAxios();
       },[]);
   const toggleDrawer = (newOpen) => () => {
     setOpen(newOpen);
@@ -228,7 +196,7 @@ function App() {
       </div>
       <div className='mybody'>
         <Routes>
-          <Route path='/' element={<HomePage post={post} UserId={user.Id}/>} />
+          <Route path='/' element={<HomePage UserId={user.Id}/>} />
           <Route path='/Blog' element={<Blog/>}/>
           <Route path='/Login' element={<Login/>} />     
           <Route path='/Register' element={<Register/>}/>

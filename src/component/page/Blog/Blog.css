@@ -1,0 +1,68 @@
+html, body{
+    height: 100%;
+    margin: 0;
+}
+
+.blogcontainer{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.blogbody{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    position: relative;
+    background-color: rgb(213, 213, 213);
+    background-image: -webkit-linear-gradient(30deg, rgb(247, 247, 247) 50%, white 50%);
+    border-radius: 5px;
+    height: 100%;
+    gap: 2rem;
+}
+
+.blogbodyheader{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 5rem;
+    padding: 3rem;
+}
+
+.blogtitle{
+    width: 70%;
+    height: auto;
+}
+.blogimage{
+    width: 30%;
+}
+
+.blogcontent{
+    padding: 4rem;
+    font-size: 1.5rem;
+}
+.blogcontent p {
+    word-wrap: break-word;
+}
+.blogbuttons{
+    width: 100%;
+    height: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4rem;
+    border-bottom: 8px solid black;
+}
+.blogbuttons p {
+    font-size: 2.5rem;
+}
+
+.blogcomment{
+    padding: 3rem;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}

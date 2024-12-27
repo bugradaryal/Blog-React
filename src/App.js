@@ -66,47 +66,57 @@ function App() {
   }
 
    const ValidateToken = async(token) => {
-    const Authresponse = await axios.post("https://localhost:7197/api/Auth/ValidateToken",
-      {},
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': token,
-        },
-      });
-      if(!Authresponse.status === 200 || Authresponse.error){
-        console.log("Token not valid!");
-        localStorage.removeItem("authorization");
-      } 
-      else{
-        const user = new User(Authresponse.data.user.id, Authresponse.data.user.userName, Authresponse.data.user.email);
-        setuser(user);
-        console.log(user);
-        console.log("Valid token. Done!")
-      }
+    try{
+      const Authresponse = await axios.post("https://localhost:7197/api/Auth/ValidateToken",
+        {},
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': token,
+          },
+        });
+        if(!Authresponse.status === 200 || Authresponse.error){
+          console.log("Token not valid!");
+          localStorage.removeItem("authorization");
+        } 
+        else{
+          const user = new User(Authresponse.data.user.id, Authresponse.data.user.userName, Authresponse.data.user.email);
+          setuser(user);
+          console.log(user);
+          console.log("Valid token. Done!")
+        }
+    }
+    catch(error){
+      localStorage.removeItem("authorization");
+      console.log("Cant get auth resources!  -  "+ error)
+    }
   }
 
   const PostDataAxios = async() => {
-    const response = await axios.get("https://localhost:7197/api/Post/GetAllPosts", {
-      pageid
-    });
-    if (response && response.data && Array.isArray(response.data))
-    {
-      const posts = response.data.map(postData => {
-        const likes = postData.likes ? postData.likes.map(likeData => new Like(likeData.id, likeData.user_id, likeData.post_id)) : [];
-        const comments = postData.comments ? postData.comments.map(comData => new Comment(comData.id, comData.content)) : [];
-        return new Post(
-          postData.id,
-          postData.title,
-          postData.content,
-          postData.date,
-          postData.image,
-          likes,
-          comments
-        );
+    try{
+      const response = await axios.get("https://localhost:7197/api/Post/GetAllPosts", {
+        pageid
       });
-      setpost(posts);
-      console.log(posts)
+      if (response && response.data && Array.isArray(response.data))
+      {
+        const posts = response.data.map(postData => {
+          const likes = postData.likes ? postData.likes.map(likeData => new Like(likeData.id, likeData.user_id, likeData.post_id)) : [];
+          const comments = postData.comments ? postData.comments.map(comData => new Comment(comData.id, comData.content, comData.userName)) : [];
+          return new Post(
+            postData.id,
+            postData.title,
+            postData.content,
+            postData.date,
+            postData.image,
+            likes,
+            comments
+          );
+        });
+        setpost(posts);
+      }
+    }
+    catch(error){
+      console.log("Cant get post resources!   -   "+error)
     }
   }
 
@@ -119,42 +129,49 @@ function App() {
           }
           else{
             console.log("Token not exist!")
-            const refleshtoken = localStorage.getItem("refreshToken");
-            if(refleshtoken)
-              {
-                console.log("Reflesh token exist!");
-                const RefResponse = axios.post("https://localhost:7197/api/Auth/RefreshToken",
-                  {},
-                  {
-                    headers: {
-                      'Content-Type': 'application/json',
-                      'RefreshToken': refleshtoken,
-                    },
-                  }
-                );
-                if(RefResponse && RefResponse.status === 200){  
-                  const jwtToken = RefResponse.headers['authorization']; 
-                  const refreshToken = RefResponse.headers['refreshtoken'];
-                  console.log("Reflesh token valid!");
-                  if (jwtToken && refreshToken) 
-                  {
-                    localStorage.setItem('authorization', jwtToken);
-                    localStorage.setItem('refreshToken', refreshToken); 
-                    console.log("Getting tokens. Done!");
-                  } 
-                  else
-                  {
-                    console.error('Cant get tokens!');
-                  }                
+            try{
+              const refleshtoken = localStorage.getItem("refreshToken");
+              if(refleshtoken)
+                {
+                  console.log("Reflesh token exist!");
+                  const RefResponse = axios.post("https://localhost:7197/api/Auth/RefreshToken",
+                    {},
+                    {
+                      headers: {
+                        'Content-Type': 'application/json',
+                        'RefreshToken': refleshtoken,
+                      },
+                    }
+                  ).then(response => {
+                    if(response && response.status === 200){  
+                      const jwtToken = response.headers['authorization']; 
+                      const refreshToken = response.headers['refreshtoken'];
+                      console.log("Reflesh token valid!");
+                      if (jwtToken && refreshToken) 
+                      {
+                        localStorage.setItem('authorization', jwtToken);
+                        localStorage.setItem('refreshToken', refreshToken); 
+                        console.log("Getting tokens. Done!");
+                      } 
+                      else
+                      {
+                        console.error('Cant get tokens!');
+                      }                
+                    }
+                    else{  
+                      localStorage.removeItem("refreshToken");
+                      console.error('Reflesh Token not valid!!');
+                    }
+                  });
                 }
-                else{  
-                  localStorage.removeItem("refreshToken");
-                  console.error('Reflesh Token not valid!!');
+                else{
+                  console.error('User must be login!');
                 }
-              }
-              else{
-                console.error('User must be login!');
-              }
+            }
+            catch(error){
+              localStorage.removeItem("refreshToken");
+              console.log("Cant get refleshtoken resources!   -   "+error);
+            }
           }
           PostDataAxios();
       },[]);

@@ -48,3 +48,9 @@
     align-items: center;
     padding-right: 1rem;
   }
+
+  .postnumber{
+    text-align: center;
+    padding: 1.5rem;
+    font-size: 1.5rem;
+  }

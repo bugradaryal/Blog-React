@@ -1,13 +1,23 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import BodyImage from '../../BodyImage/BodyImage';
 import './HomePage.css';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import SearchIcon from '@mui/icons-material/Search';
+import axios from 'axios';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 const HomePage = ({post,UserId}) => {
+  const [postcount, setpostcount] = useState(1);
+  useEffect(() => {
+    axios.get("https://localhost:7197/api/Post/GetPostCounts").then(response => {
+      response ? setpostcount(response.data > 8 ? response.data % 8 : 1) : setpostcount(1);
+    });
+  },[]);
+  
   const posts = Array.isArray(post) 
-  ? post.map((x) => <BodyImage key={x.id} Title={x.Title} Image={x.Image} Content={x.Content.substr(0,220)} Like ={x.Like} UserId={UserId} CommentCount={x.Comment ? x.Comment.length : 0}/>) 
+  ? post.map((x) => <BodyImage key={x.id} Post={x} UserId={UserId}/>) 
   : <p>Loading...</p>;
     return (
       <div className="Main">
@@ -47,6 +57,9 @@ const HomePage = ({post,UserId}) => {
         </div>
         <div className='mybody'> 
           {posts}
+        </div>
+        <div className='postnumber'>
+        <Button variant="text"><ArrowBackIcon/></Button>{postcount}<Button variant="text"><ArrowForwardIcon/></Button>
         </div>
       </div>
     );

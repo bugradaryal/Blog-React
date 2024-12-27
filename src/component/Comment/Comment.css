@@ -1,0 +1,21 @@
+.comment{
+    background-color: lightgray;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+.commentheader{
+    display: flex;
+    flex-direction: row;
+    font-size: 1.5rem;
+    gap: 1.3rem;
+    padding: 1rem;
+    border-bottom: 1px solid black;
+    
+}
+.commentcontent{
+    padding: 1rem;
+    font-size: 1.2rem;
+    word-wrap: break-word;
+}

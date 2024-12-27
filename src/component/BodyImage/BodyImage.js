@@ -2,44 +2,51 @@ import React, { useState, useEffect } from 'react';
 import './BodyImage.css';
 import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
 import MessageIcon from '@mui/icons-material/Message';
+import { useNavigate } from 'react-router-dom';
 
-const BodyImage = ({Title,Image,Content,Like,UserId,CommentCount}) => {
-    const [likecount, setlikecount] = useState(0);
+const BodyImage = ({Post, UserId}) => {
+    const navigate = useNavigate();
     const [isLiked, setIsLiked] = useState(false);
+    const [image, setimage] = useState();
+
     useEffect(() => {
-        if (Like) {
-          setlikecount(Like.length);
-          if(Like.some(like => like.user_id === UserId)){
+        if(Post.Like && Post.Like.some(like => like.user_id === UserId)){
             setIsLiked(true);
-            }
         }
+        setimage(Post.Image ? Post.Image : './images/noimage.png');
       }, []); 
+      const handleSubmit = (e) => {
+        e.preventDefault(); // Formun normal şekilde submit olmasını engelle
+        navigate('/Blog', {
+          state: {
+            Post: Post,
+            UserId: UserId,
+            isLiked: isLiked,
+          },
+        });
+      };
 
-
-    if(!Image || Image === 0 || Image === null){
-        Image ='./images/noimage.png';
-    }
     return (
-        <div className="liste" >
+        <form className="liste" onSubmit={handleSubmit}>
             <div className='text-center'>
-                <p className='h5'> {Title}</p>
+                <p className='h5'> {Post.Title}</p>
             </div>
             <hr></hr>
             <div className='imagecontainer'>
-                <img alt='Image' className='imageclass' src= {Image} loading="lazy"/>    
+                <img alt='Image' className='imageclass' src= {image} loading="lazy"/>    
             </div>
             <hr></hr>
             <div>
-                <p className='paragraph'>{Content}</p>
+                <p className='paragraph'>{Post.Content.substr(0,220)}</p>
             </div>
             <div>
-                <button type="button" className="btn btn-primary">Read</button>
+                <button type="submit"  className="btn btn-primary">Read</button>
             </div>
             <hr></hr>
             <div className='likecomment'>
-                <p><MessageIcon/>: <b>{CommentCount}</b></p> <p id='likedislike'><ThumbUpAltIcon style={{color: isLiked ? "#3B71CA" : "black" }}/>: <b style={{color: isLiked ? "#3B71CA" : "black" }}>{likecount}</b></p>
+                <p><MessageIcon/>: <b>{Post.Comment ? Post.Comment.length : 0}</b></p> <p id='likedislike'><ThumbUpAltIcon style={{color: isLiked ? "#3B71CA" : "black" }}/>: <b style={{color: isLiked ? "#3B71CA" : "black" }}>{Post.Like ? Post.Like.length : 0}</b></p>
             </div>
-        </div>
+        </form>
     );
 };
 

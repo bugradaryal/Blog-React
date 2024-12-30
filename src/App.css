@@ -7,6 +7,18 @@ html body{
   min-height: 100%;
   background-color: rgb(42, 38, 48);
 }
+html {
+  overflow: scroll;
+  overflow-x: hidden;
+}
+::-webkit-scrollbar {
+  width: 0;  /* Remove scrollbar space */
+  background: transparent;  /* Optional: just make scrollbar invisible */
+}
+/* Optional: show position indicator in red */
+::-webkit-scrollbar-thumb {
+  background: #FF0000;
+}
 
 .App {
   display: flex;
@@ -58,4 +70,38 @@ html body{
 
 .githublink{
   color: black;
+}
+
+.mymodal{
+  width: 15%;
+  background-color: white;
+  right: 0;
+  position: absolute;
+  top: 5rem;
+  height: auto;
+  padding: 3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.mymodal div{
+ width: 100%;
+ color: rgb(112, 112, 112);
+ padding: 0.5rem;
+}
+
+
+.modalbutton{
+  background-color: transparent;
+  border: none;
+  width: auto;
+}
+
+.modalbutton:active{
+  color: black;
+}
+
+.mymodal div:hover{
+  background-color: rgb(245,245,245);
 }

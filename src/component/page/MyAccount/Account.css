@@ -1,0 +1,23 @@
+html, body{
+    height: 100%;
+    margin: 0;
+}
+
+.accountcontainer{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.accountbody{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    position: relative;
+    background-color: rgb(213, 213, 213);
+    background-image: -webkit-linear-gradient(30deg, rgb(247, 247, 247) 50%, white 50%);
+    border-radius: 5px;
+    height: 100%;
+    padding: 5rem;
+}

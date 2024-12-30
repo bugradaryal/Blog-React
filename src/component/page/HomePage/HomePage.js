@@ -54,9 +54,9 @@ const HomePage = ({UserId, UserName}) => {
   const GetPostByPage = async(updown) => {
     console.log(postcount)
     let maxpage = 1;
-    if(postcount > 8){
-      maxpage = Math.floor(postcount/8);
-      if(postcount%8 !== 0){
+    if(postcount > 4){
+      maxpage = Math.floor(postcount/4);
+      if(postcount%4 !== 0){
         maxpage++;
       }
     }

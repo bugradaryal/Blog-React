@@ -55,8 +55,6 @@ const Blog = () => {
             if(token){
                 const holdvalue = !isLiked;
                 if(holdvalue){
-                    console.log(state.UserId)
-                    console.log(state.Post.id)
                     await axios.post("https://localhost:7197/api/Post/LikeThePost", null, {
                         params: {
                             userId: state.UserId,
@@ -96,7 +94,7 @@ const Blog = () => {
                 }   
             }  
             else{
-                navigate('/');
+                navigate('/Login');
             }
         }
         catch(error){
@@ -122,7 +120,7 @@ const Blog = () => {
                 </div>
                 <div className='blogbuttons'>
                 <p style={{fontSize:"2.5rem"}}><MessageIcon style={{color: "black", fontSize:"2.5rem"}}/>: <b>{state.Post.Comment ? state.Post.Comment.length : 0}</b></p> 
-                <button onClick={likedislike} style={{fontSize:"2.5rem"}}><ThumbUpAltIcon style={{color: isLiked ? "#3B71CA" : "black", fontSize:"2.5rem"}}/>: <b style={{color: isLiked ? "#3B71CA" : "black" }}>{likecount}</b></button>
+                <button disabled={state.UserId ? false : true} onClick={likedislike} style={{fontSize:"2.5rem",color:"black"}}><ThumbUpAltIcon style={{color: isLiked ? "#3B71CA" : "black", fontSize:"2.5rem"}}/>: <b style={{color: isLiked ? "#3B71CA" : "black" }}>{likecount}</b></button>
                 </div>
                 <div className='blogcomment'>
                     <b className='h2'>Comments:</b>

@@ -33,6 +33,11 @@ import User from './models/User';
 import { jwtDecode } from 'jwt-decode';
 import Blog from './component/page/Blog/Blog';
 import Users from './component/page/Admin/Users/Users';
+import Modal from '@mui/material/Modal';  // Modal'ı içeri aktar
+import PersonIcon from '@mui/icons-material/Person';
+import LogoutIcon from '@mui/icons-material/Logout';
+import Account from './component/page/MyAccount/Account';
+
 
 
 function App() {
@@ -42,14 +47,8 @@ function App() {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false); // 'setOpen' burada tanımlanır
   const [loading, setLoading] = useState(true);
+  const [modalopen, setmodalopen] = useState(false);
 
-  /*
-  const apiClient = axios.create({
-    baseURL: "https://localhost:7197/api", // API'nin base URL'i
-    timeout: 5000, // Timeout süresi
-    headers: {"Content-Type":"application/json"}
-  });
-*/
 
   function isTokenExpired(token) {
     try {
@@ -150,6 +149,9 @@ function App() {
     setOpen(newOpen);
   };
 
+  const handleOpen = () => setmodalopen(true);  // Modal'ı açma fonksiyonu
+  const handleClose = () => setmodalopen(false); // Modal'ı kapama fonksiyonu
+
   const DrawerList = (
     <Box sx={{ width: 250 }} role="presentation" onClick={toggleDrawer(false)}>
       <List>
@@ -188,6 +190,16 @@ function App() {
       </List>
     </Box>
   );
+  
+  const logout = () => {
+    setuser("","");
+    setrole("");
+    localStorage.removeItem("authorization");
+    localStorage.removeItem("refreshtoken");
+    handleClose();
+    navigate('/Login');
+  }
+
   return (
     <div className="App">
       <div className='myheader'>
@@ -196,10 +208,29 @@ function App() {
           {DrawerList}
         </Drawer>
         <div className='profile'>
-          <Button variant='text' style={{color:"black"}}><KeyboardArrowDownIcon/></Button>
+          <Button variant='text' style={{color:"black"}} onClick={handleOpen}>
+            <KeyboardArrowDownIcon/>
+          </Button>
           <FaceIconM style={{ fontSize: '2.5rem' }}/>
          </div>
       </div>
+
+      <Modal
+        open={modalopen}
+        onClose={handleClose}
+        aria-labelledby="parent-modal-title"
+        aria-describedby="parent-modal-description"
+      >
+        <Box className="mymodal">
+          <div>
+             <PersonIcon/><button onClick={()=>navigate('/Account')} className='h5 modalbutton'>My Account</button>
+          </div>
+          <div>
+            <LogoutIcon/><button onClick={logout} className='h5 modalbutton'>Log Out</button>
+          </div>
+        </Box>
+      </Modal>
+
       <div className='mybody'>
         <Routes>
           <Route path='/' element={<HomePage UserId={user.Id} UserName={user.UserName}/>} />
@@ -213,6 +244,7 @@ function App() {
           }     
           <Route path='/AboutUs' element={<AboutUs/>}/>
           <Route path='/ContactUs' element={<ContactUs/>}/>
+          <Route path='/Account' element={<Account/>}/>
           {/*admin path*/}
           <Route path='/Admin/Users' element={<Users/>}/>
         </Routes>

@@ -3,10 +3,9 @@
     display: flex;
     flex-direction: column;
     background-color: rgb(226, 226, 227);
-    height: "100%";
-    width: 23%;
+    height: 40rem;
+    width: 42%;
     border-radius: 15px;
-    padding: 30px;
     word-wrap:break-word;
 }
 
@@ -19,17 +18,26 @@ hr{
 
 
 .imageclass{
-    width: 80%;
+    width: 100%;
     height: 100%;
     border-radius: 5px;
 }
 
 .imagecontainer{
     width: 100%;
-    height: 9.5rem;
+    height: 40rem;
     text-align: center;
     overflow: hidden; /* Resmin taşmasını engeller */
-    
+}
+
+
+.contentcontainerforbody{
+    width: 100%;
+    height: 100%;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .paragraph{
@@ -47,4 +55,13 @@ hr{
 
 .likecount{
     color: #3B71CA;
+}
+
+.readbutton{
+    width: 15%;
+}
+
+.hr{
+    border-bottom: 3px solid black;
+    border-radius: 8px;
 }

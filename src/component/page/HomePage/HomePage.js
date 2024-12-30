@@ -11,7 +11,7 @@ import Post from '../../../models/Post';
 import Like from '../../../models/Like';
 import Comment from '../../../models/Comment';
 
-const HomePage = ({UserId}) => {
+const HomePage = ({UserId, UserName}) => {
   const [post, setpost] = useState(new Post('', ''));
   const [pagenumber, setpagenumber] = useState(1);
   const [postcount, setpostcount] = useState(0);
@@ -78,7 +78,7 @@ const HomePage = ({UserId}) => {
   }
 
   const posts = Array.isArray(post) 
-  ? post.map((x) => <BodyImage key={x.id} Post={x} UserId={UserId}/>) 
+  ? post.map((x) => <BodyImage key={x.id} Post={x} UserId={UserId} UserName={UserName}/>) 
   : <p>Loading...</p>;
 
 
@@ -90,6 +90,7 @@ const HomePage = ({UserId}) => {
               <p className='h2'>Discover Some Blogs</p>
             </div>
             <div className='headerimputs'>
+              {/*
               <TextField id="outlined-basic" sx={{
                       color:"black",
                       "& .MuiOutlinedInput-root": {
@@ -115,6 +116,7 @@ const HomePage = ({UserId}) => {
               }} label="Search" variant="outlined" InputProps={{endAdornment: <Button sx={{
                 color:"white",
               }} variant="text"><SearchIcon/></Button>}}/>
+            */}
             </div>
           </div>
         </div>

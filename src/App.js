@@ -32,6 +32,8 @@ import axios from 'axios';
 import User from './models/User';
 import { jwtDecode } from 'jwt-decode';
 import Blog from './component/page/Blog/Blog';
+import Users from './component/page/Admin/Users/Users';
+
 
 function App() {
   const [user, setuser] = useState(new User('', ''));
@@ -77,6 +79,7 @@ function App() {
           else{
             const user = new User(response.data.user.id, response.data.user.userName, response.data.user.email);
             setuser(user);
+            setrole(response.data.role);
             console.log("Valid token. Done!")
           }
         });
@@ -171,7 +174,10 @@ function App() {
       <List>
         {['Chart', 'Users', "Post Manager"].map((text, index) => (
           <ListItem key={text} disablePadding>
-            <ListItemButton>
+            <ListItemButton onClick={() => {
+              // Sayfa geçişi yapılır
+              if (text === 'Users') navigate('/Admin/Users');
+            }}>
               <ListItemIcon>
                 {index % 3 === 0 ? <BarChartIcon /> : index % 3 === 1 ? <PeopleAltIcon /> : <PostAddIcon/>}
               </ListItemIcon>
@@ -196,13 +202,19 @@ function App() {
       </div>
       <div className='mybody'>
         <Routes>
-          <Route path='/' element={<HomePage UserId={user.Id}/>} />
+          <Route path='/' element={<HomePage UserId={user.Id} UserName={user.UserName}/>} />
           <Route path='/Blog' element={<Blog/>}/>
           <Route path='/Login' element={<Login/>} />     
           <Route path='/Register' element={<Register/>}/>
-          <Route path='/EmailVerification' element={<EmailVerification/>}/>
+          {
+            /*
+            <Route path='/EmailVerification' element={<EmailVerification/>}/>
+            */
+          }     
           <Route path='/AboutUs' element={<AboutUs/>}/>
           <Route path='/ContactUs' element={<ContactUs/>}/>
+          {/*admin path*/}
+          <Route path='/Admin/Users' element={<Users/>}/>
         </Routes>
       </div>
       <div className='copyright'>

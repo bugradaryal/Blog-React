@@ -4,7 +4,7 @@ import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
 import MessageIcon from '@mui/icons-material/Message';
 import { useNavigate } from 'react-router-dom';
 
-const BodyImage = ({Post, UserId}) => {
+const BodyImage = ({Post, UserId, UserName}) => {
     const navigate = useNavigate();
     const [isLiked, setIsLiked] = useState(false);
     const [image, setimage] = useState();
@@ -21,6 +21,7 @@ const BodyImage = ({Post, UserId}) => {
           state: {
             Post: Post,
             UserId: UserId,
+            UserName: UserName,
             isLiked: isLiked,
           },
         });

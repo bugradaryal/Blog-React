@@ -63,7 +63,7 @@ function App() {
 
    const ValidateToken = async(token) => {
     try{
-      const Authresponse = await axios.post("https://localhost:7197/api/Auth/ValidateToken",
+      await axios.post("https://localhost:7197/api/Auth/ValidateToken",
         {},
         {
           headers: {
@@ -76,12 +76,23 @@ function App() {
             localStorage.removeItem("authorization");
           } 
           else{
-            const user = new User(response.data.user.id, response.data.user.userName, response.data.user.email);
-            setuser(user);
+            const newuser = new User(
+              response.data.user.id, 
+              response.data.user.userName, 
+              response.data.user.email, 
+              response.data.user.name,
+              response.data.user.surname,
+              response.data.user.phoneNumber,
+              response.data.user.address
+            );
+            setuser(newuser);
             setrole(response.data.role);
             console.log("Valid token. Done!")
           }
-        });
+        }).catch(error => {
+          localStorage.removeItem("authorization");
+          console.error("Error during Authorization request:", error.response.data.message);
+        });;
     }
     catch(error){
       localStorage.removeItem("authorization");
@@ -93,9 +104,15 @@ function App() {
   useEffect(() => {
     setLoading(true);
           const token = localStorage.getItem("authorization"); 
-          if(token && !isTokenExpired(token)){
-            console.log("Token exist!");
-            ValidateToken(token);
+          if(token){
+            if(!isTokenExpired(token)){
+              console.log("Token exist!");
+              ValidateToken(token);
+            }
+            else{
+              console.log("Token expired!");
+              localStorage.removeItem("authorization");
+            }
           }
           else{
             console.log("Token not exist!")
@@ -104,7 +121,7 @@ function App() {
               if(refleshtoken)
                 {
                   console.log("Reflesh token exist!");
-                  const RefResponse = axios.post("https://localhost:7197/api/Auth/RefreshToken",
+                  axios.post("https://localhost:7197/api/Auth/RefreshToken",
                     {},
                     {
                       headers: {
@@ -132,12 +149,15 @@ function App() {
                       localStorage.removeItem("refreshToken");
                       console.error('Reflesh Token not valid!!');
                     }
+                  }).catch(error => {
+                    localStorage.removeItem("refreshToken");
+                    console.error("Error during RefreshToken request:", error.response.data.message);
                   });
                 }
-                else{
-                  console.log("Reflesh token not exist!");
-                  console.log('User must be login!');
-                }
+              else{
+                console.log("Reflesh token not exist!");
+                console.log('User must be login!');
+              }
             }
             catch(error){
               localStorage.removeItem("refreshToken");
@@ -223,7 +243,7 @@ function App() {
       >
         <Box className="mymodal">
           <div>
-             <PersonIcon/><button onClick={()=>navigate('/Account')} className='h5 modalbutton'>My Account</button>
+             <PersonIcon/><button onClick={()=>{navigate('/Account'); handleClose();}} className='h5 modalbutton'>My Account</button>
           </div>
           <div>
             <LogoutIcon/><button onClick={logout} className='h5 modalbutton'>Log Out</button>
@@ -244,7 +264,7 @@ function App() {
           }     
           <Route path='/AboutUs' element={<AboutUs/>}/>
           <Route path='/ContactUs' element={<ContactUs/>}/>
-          <Route path='/Account' element={<Account/>}/>
+          <Route path='/Account' element={<Account user={user}/>}/>
           {/*admin path*/}
           <Route path='/Admin/Users' element={<Users/>}/>
         </Routes>

@@ -150,7 +150,7 @@ const Register = () => {
                     </div>
                 </div>
                 {message && <p className="error-message" style={{ color: 'red' }}>{message}</p>}
-                <Button className='loginbutton' type="submit" variant="contained">Register</Button>
+                <Button sx={{backgroundColor:"black"}} className='loginbutton' type="submit" variant="contained">Register</Button>
                 <b>You have an account? <button onClick={() => navigate('/Login')} className='btn btn-link'>Login now</button></b>
             </form>
         </div>

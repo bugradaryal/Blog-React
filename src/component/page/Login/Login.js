@@ -57,7 +57,7 @@ const Login = () => {
                 <TextField onChange={(e) => setPassword(e.target.value)} type='password' value={password} label="Password" variant="standard" required />
                 {message && <p className="error-message" style={{ color: 'red' }}>{message}</p>}
                 </div>
-                <Button type='submit' className='loginbutton' variant="contained">Login</Button>
+                <Button sx={{backgroundColor:"black"}} type='submit' className='loginbutton' variant="contained">Login</Button>
                 <b>You don't have account?<button onClick={() => navigate('/Register')}  className='btn btn-link'>Register now</button></b>
             </form>
         </div>

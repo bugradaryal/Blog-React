@@ -100,7 +100,6 @@ function App() {
     }
   }
 
-
   useEffect(() => {
     setLoading(true);
           const token = localStorage.getItem("authorization"); 
@@ -264,7 +263,7 @@ function App() {
           <Route path='/Account' element={<Account user={user}/>}/>
           {/*admin path*/}
           <Route path='/Admin/Users' element={<Users/>}/>
-          <Route path='/Admin/PostManager' element={<PostManager post={"test"}/>}/>
+          <Route path='/Admin/PostManager' element={<PostManager/>}/>
         </Routes>
       </div>
       <div className='copyright'>

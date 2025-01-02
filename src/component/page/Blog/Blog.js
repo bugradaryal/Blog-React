@@ -16,6 +16,7 @@ const Blog = () => {
     const [isLiked, setIsLiked] = useState(state.isLiked || false );
     const [Content, setcontent] = useState();
     const [likecount, setlikecount] = useState(state.Post.Like ? state.Post.Like.length : 0);
+    const [commentcount, setcommentcount] = useState(state.Post.Comment ? state.Post.Comment.length : 0);
     const writecoment = async(e) => {
         e.preventDefault();
         try{
@@ -36,6 +37,7 @@ const Blog = () => {
                 .then(response => {
                     if(response && response.status === 200){
                         setComments([...comments, { userName: state.UserName, content: Content }]);
+                        setcommentcount(commentcount+1)
                         setcontent("");
                     }
                 });
@@ -119,7 +121,7 @@ const Blog = () => {
                     <p>{state.Post.Content}</p>
                 </div>
                 <div className='blogbuttons'>
-                <p style={{fontSize:"2.5rem"}}><MessageIcon style={{color: "black", fontSize:"2.5rem"}}/>: <b>{state.Post.Comment ? state.Post.Comment.length : 0}</b></p> 
+                <p style={{fontSize:"2.5rem"}}><MessageIcon style={{color: "black", fontSize:"2.5rem"}}/>: <b>{commentcount}</b></p> 
                 <button disabled={state.UserId ? false : true} onClick={likedislike} style={{fontSize:"2.5rem",color:"black"}}><ThumbUpAltIcon style={{color: isLiked ? "#3B71CA" : "black", fontSize:"2.5rem"}}/>: <b style={{color: isLiked ? "#3B71CA" : "black" }}>{likecount}</b></button>
                 </div>
                 <div className='blogcomment'>

@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 import BodyImage from '../../BodyImage/BodyImage';
 import './HomePage.css';
 import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import SearchIcon from '@mui/icons-material/Search';
 import axios from 'axios';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';

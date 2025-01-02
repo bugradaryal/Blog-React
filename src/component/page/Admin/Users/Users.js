@@ -43,7 +43,7 @@ const Users = () => {
         axios.post("https://localhost:7197/api/Admin/SuspendUser",null,{
           params: {
             userId: user_id,
-            suspend: accountSuspended
+            suspend: suspend
         },
           headers: {
             'Content-Type': 'application/json',

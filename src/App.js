@@ -37,7 +37,7 @@ import Modal from '@mui/material/Modal';  // Modal'ı içeri aktar
 import PersonIcon from '@mui/icons-material/Person';
 import LogoutIcon from '@mui/icons-material/Logout';
 import Account from './component/page/MyAccount/Account';
-
+import PostManager from './component/page/Admin/PostManager/PostManager';
 
 
 function App() {
@@ -199,6 +199,7 @@ function App() {
             <ListItemButton onClick={() => {
               // Sayfa geçişi yapılır
               if (text === 'Users') navigate('/Admin/Users');
+              if (text === 'Post Manager') navigate('/Admin/PostManager');
             }}>
               <ListItemIcon>
                 {index % 3 === 0 ? <BarChartIcon /> : index % 3 === 1 ? <PeopleAltIcon /> : <PostAddIcon/>}
@@ -257,16 +258,13 @@ function App() {
           <Route path='/Blog' element={<Blog/>}/>
           <Route path='/Login' element={<Login/>} />     
           <Route path='/Register' element={<Register/>}/>
-          {
-            /*
-            <Route path='/EmailVerification' element={<EmailVerification/>}/>
-            */
-          }     
+          <Route path='/EmailVerification' element={<EmailVerification/>}/>  
           <Route path='/AboutUs' element={<AboutUs/>}/>
           <Route path='/ContactUs' element={<ContactUs/>}/>
           <Route path='/Account' element={<Account user={user}/>}/>
           {/*admin path*/}
           <Route path='/Admin/Users' element={<Users/>}/>
+          <Route path='/Admin/PostManager' element={<PostManager post={"test"}/>}/>
         </Routes>
       </div>
       <div className='copyright'>

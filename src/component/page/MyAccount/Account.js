@@ -14,9 +14,11 @@ const Account = ({user}) => {
     const [deletemodalopen, setdeletemodalopen] = useState(false);
     const handledeleteOpen = () => setdeletemodalopen(true);  // Modal'ı açma fonksiyonu
     const handledeleteClose = () => setdeletemodalopen(false); // Modal'ı kapama fonksiyonu
-    const oldpassword = useRef("");
-    const newpassword = useRef("");
-    const confnewpassword = useRef("");
+    const [passwords, setPasswords] = useState({
+        oldpassword: "",
+        newpassword: "",
+        confnewpassword: "",
+    });
     const [passmessage, setpassmessage] = useState("");
 
 
@@ -73,7 +75,7 @@ const Account = ({user}) => {
                         console.log("Updating account is done!");
                     }
                     else{
-                        //navigate('/');
+                        navigate('/');
                     }
                 });
             }
@@ -82,17 +84,47 @@ const Account = ({user}) => {
             }
         }
         else{
-            //navigate('/Login');
+            navigate('/Login');
         }
     }
 
     const changepassword = async(e) => {
         e.preventDefault();
-        const old_p = oldpassword.current.value;
-        const new_p = newpassword.current.value;
-        const conf_p = confnewpassword.current.value;
-        if(new_p === conf_p){
-            await axios.put();
+        const { oldpassword, newpassword, confnewpassword } = passwords;
+        console.log(newpassword)
+        console.log(confnewpassword)
+        if(newpassword === confnewpassword){
+            const token = localStorage.getItem("authorization"); 
+            if(token){
+                try{
+                    await axios.put("https://localhost:7197/api/User/ChangePassword", 
+                        {
+                            user_id: getuser.Id,
+                            oldpassword: oldpassword,
+                            newpassword: newpassword,
+                        },
+                        {
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': token,
+                            }
+                        }
+                    ).then(response => {
+                        if(response && response.status === 200){
+                            setpassmessage("Password Changed!!");
+                        }
+                        else{
+                            setpassmessage("Password can't changed!!");
+                        }
+                    });
+                }
+                catch(error){
+                    console.error(error.response.data.errors)
+                }
+            }
+            else{
+                navigate("/");
+            }
         }
         else{
             setpassmessage("Passwords not match!!");
@@ -136,11 +168,11 @@ const Account = ({user}) => {
                 </form>
                 <form className='bottomaccountbody' onSubmit={changepassword}>
                     <div className='d-flex flex-row justify-content-between w-100 gap-5'>
-                        <TextField className='w-50' id="standard-basic" ref={oldpassword} label="Old Password" variant="standard" required/>
-                        <TextField className='w-50' id="standard-basic" ref={newpassword} label="New Password" variant="standard" required/>
+                        <TextField className='w-50' type='password' onChange={(e) => setPasswords({ ...passwords, oldpassword: e.target.value })} label="Old Password" variant="standard" required/>
+                        <TextField className='w-50' type='password' onChange={(e) => setPasswords({ ...passwords, newpassword: e.target.value })} label="New Password" variant="standard" required/>
                     </div>
                     <div className='d-flex flex-row w-100 gap-5'>
-                        <TextField className='w-50' id="standard-basic" ref={confnewpassword} label="Confirm New Password" variant="standard" required/>   
+                        <TextField className='w-50' type='password' onChange={(e) => setPasswords({ ...passwords, confnewpassword: e.target.value })} label="Confirm New Password" variant="standard" required/>   
                         <div className='w-50'></div>
                     </div>
                     <b className='text-danger m-2'>{passmessage}</b>

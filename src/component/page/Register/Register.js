@@ -27,7 +27,7 @@ const Register = () => {
                 setmessage('Passwords do not match. Please try again.');
                 return;
             }
-            const response = await axios.post("https://localhost:7197/api/Auth/Register", {
+            await axios.post("https://localhost:7197/api/Auth/Register", {
                 Name,
                 Surname,
                 UserName,
@@ -35,10 +35,27 @@ const Register = () => {
                 Password,
                 Address: Address || '', // Boşsa boş string olarak gönder
                 PhoneNumber: PhoneNumber || '', // Boşsa boş string olarak gönder
+            }).then(response => {
+                if(response && response.status === 200){
+                    console.log('Register successful:');
+                    setmessage('Register successful!');
+                    axios.post("https://localhost:7197/api/Auth/SendMail", Email, {
+                        headers: {
+                          "Content-Type": "application/json", // Bu başlık, verinin JSON formatında olduğunu belirtir
+                        },
+                      }).then(emailresponse => {
+                        if(!emailresponse && emailresponse.status !==200){
+                            setmessage("Something went wrong, please contact with modarators!!");
+                            console.log("Something went wrong, please contact with modarators!!")
+                        }
+                        else{
+                            console.log("Mail sended! Check your spam box!")
+                        }
+                    }).catch(error => {
+                        console.log(error.response.data.error)
+                    });
+                }
             });
-            console.log('Register successful:', response.data);
-            setmessage('Register successful!');
-            navigate('/Register');
         }
         catch (err) {
             console.error('Register error:', err);

@@ -38,7 +38,9 @@ import PersonIcon from '@mui/icons-material/Person';
 import LogoutIcon from '@mui/icons-material/Logout';
 import Account from './component/page/MyAccount/Account';
 import PostManager from './component/page/Admin/PostManager/PostManager';
-
+import AddPost from './component/page/Admin/PostManager/AddPost';
+import Chart from './component/page/Admin/Chart/Chart';
+import ManageComments from './component/page/Admin/PostManager/ManageComments';
 
 function App() {
   const [user, setuser] = useState(new User('', ''));
@@ -171,6 +173,11 @@ function App() {
   const handleOpen = () => setmodalopen(true);  // Modal'ı açma fonksiyonu
   const handleClose = () => setmodalopen(false); // Modal'ı kapama fonksiyonu
 
+  let adminpage = [];
+  if(user && role === "Administrator"){
+    adminpage = ['Chart', 'Users', "Post Manager"];
+  }
+
   const DrawerList = (
     <Box sx={{ width: 250 }} role="presentation" onClick={toggleDrawer(false)}>
       <List>
@@ -193,12 +200,13 @@ function App() {
       </List>
       <Divider />
       <List>
-        {['Chart', 'Users', "Post Manager"].map((text, index) => (
+        {adminpage.map((text, index) => (
           <ListItem key={text} disablePadding>
             <ListItemButton onClick={() => {
               // Sayfa geçişi yapılır
               if (text === 'Users') navigate('/Admin/Users');
               if (text === 'Post Manager') navigate('/Admin/PostManager');
+              if(text === 'Chart') navigate('/Admin/Chart');
             }}>
               <ListItemIcon>
                 {index % 3 === 0 ? <BarChartIcon /> : index % 3 === 1 ? <PeopleAltIcon /> : <PostAddIcon/>}
@@ -227,12 +235,16 @@ function App() {
         <Drawer open={open} onClose={toggleDrawer(false)}>
           {DrawerList}
         </Drawer>
-        <div className='profile'>
+        {
+          user ?
+          <div className='profile'>
           <Button variant='text' style={{color:"black"}} onClick={handleOpen}>
             <KeyboardArrowDownIcon/>
           </Button>
           <FaceIconM style={{ fontSize: '2.5rem' }}/>
          </div>
+         : ""
+        }
       </div>
 
       <Modal
@@ -264,6 +276,9 @@ function App() {
           {/*admin path*/}
           <Route path='/Admin/Users' element={<Users/>}/>
           <Route path='/Admin/PostManager' element={<PostManager/>}/>
+          <Route path='/Admin/AddPost' element={<AddPost/>}/>
+          <Route path='/Admin/Chart' element={<Chart/>}/>
+          <Route path='/Admin/ManageComments' element={<ManageComments/>}/>
         </Routes>
       </div>
       <div className='copyright'>

@@ -25,12 +25,14 @@ const PostManager = () => {
       const [postcount, setpostcount] = useState(0);
       const [allposts, setallposts] = useState([]);
       const [selectedData, setSelectedData] = useState(null);  // Seçilen veri
-      const [commentmodalopen, setcommentmodalopen] = useState(false);
-      const handlecommentOpen = (data) => {
+      const [editmodalopen, seteditmodalopen] = useState(false);
+      const handleeditOpen = (data) => {
         setSelectedData(data);
-        setcommentmodalopen(true);  // Modal'ı açma fonksiyonu
+        seteditmodalopen(true);  // Modal'ı açma fonksiyonu
       }
-      const handlecommentClose = () => setcommentmodalopen(false); // Modal'ı kapama fonksiyonu
+      const handleeditClose = () => seteditmodalopen(false); // Modal'ı kapama fonksiyonu
+    
+
       const navigate = useNavigate();
     useEffect(()=>{
             PostDataAxios(1);
@@ -51,6 +53,7 @@ const PostManager = () => {
                     },
                     }).then(response => {
                         if(response && response.status === 200){
+                            console.log(response.data)
                             setallposts(response.data);
                         }
                     }).catch(error =>{
@@ -135,7 +138,7 @@ const PostManager = () => {
             }).then(response => {
                     if(response && response.status === 200){
                         console.log("Update Done!!")
-                        handlecommentClose();
+                        handleeditClose();
                         setallposts(prevPosts =>
                             prevPosts.map(post =>
                                 post.id === selectedData.id
@@ -152,12 +155,11 @@ const PostManager = () => {
             navigate('/');
         }
     }
-
     return (
         <div className='postmanagercontainer'>
             <Modal
-                open={commentmodalopen}
-                onClose={handlecommentClose}
+                open={editmodalopen}
+                onClose={handleeditClose}
                 aria-labelledby="parent-modal-title"
                 aria-describedby="parent-modal-description">
                 <Box className="myupdatemodal">
@@ -168,7 +170,7 @@ const PostManager = () => {
             </Modal>
             <div className='postmanagerbody'>
             <div className='managerheader'>
-                <Button sx={{backgroundColor:"black", color:"white"}} size='large' variant="outlined">Add New Post</Button>
+                <Button onClick={(e) => navigate('/Admin/AddPost')} sx={{backgroundColor:"black", color:"white"}} size='large' variant="outlined">Add New Post</Button>
             </div>
             <TableContainer style={{backgroundColor:"transparent", padding:"2rem"}} className='postmanagertable' component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -192,9 +194,12 @@ const PostManager = () => {
                         <TableCell align="left">{row.title.substring(0,120)}</TableCell>
                         <TableCell align="left">{format(row.date, 'dd/MM/yyyy - hh:mm')}</TableCell>
                         <TableCell align="right" sx={{display:"flex",gap:"0.6rem"}}>
-                        <Button onClick={()=>handlecommentOpen(row)} sx={{backgroundColor:"lightblue"}} size="small" variant="outlined">Edit</Button>
+                        <Button onClick={()=>handleeditOpen(row)} sx={{backgroundColor:"lightblue"}} size="small" variant="outlined">Edit</Button>
                         <Button onClick={(e) => deletepost(e, row.id)} sx={{backgroundColor:"#ec5353"}} size="small" variant="outlined">Delete</Button> 
-                        <Button sx={{backgroundColor:"whitesmoke"}} size="small" variant="outlined">Comments</Button>     
+                        <Button onClick={(e) => navigate('/Admin/ManageComments', {
+                            state: {
+                            Comments: row.comments,
+                        },})} sx={{backgroundColor:"whitesmoke"}} size="small" variant="outlined">Comments</Button>     
                         </TableCell>              
                         </TableRow>
                     ))}

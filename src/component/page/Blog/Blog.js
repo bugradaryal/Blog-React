@@ -17,6 +17,10 @@ const Blog = () => {
     const [Content, setcontent] = useState();
     const [likecount, setlikecount] = useState(state.Post.Like ? state.Post.Like.length : 0);
     const [commentcount, setcommentcount] = useState(state.Post.Comment ? state.Post.Comment.length : 0);
+    const byteToImageUrl = (base64String) => {
+        return `data:image/jpeg;base64,${base64String}`;
+    };
+    const [image, setimage] = useState(state.Post.Image && state.Post.Image !== 'AA==' ? byteToImageUrl(state.Post.Image) : './images/noimage.png');
     const writecoment = async(e) => {
         e.preventDefault();
         try{
@@ -103,7 +107,6 @@ const Blog = () => {
             console.error(error);
         }
     };
-    
 
     return (
         <div className='blogcontainer'>  
@@ -114,7 +117,7 @@ const Blog = () => {
                         <p>Date: {format(state.Post.Date, 'dd/MM/yyyy')}</p>
                     </div>
                     <div className='blogimage'>
-                        <img alt='Image' className='imageclass' src= './images/noimage.png' loading="lazy"/>    
+                        <img alt='Image' className='imageclass' src= {image} loading="lazy"/>    
                     </div>
                 </div>
                 <div className='blogcontent'>

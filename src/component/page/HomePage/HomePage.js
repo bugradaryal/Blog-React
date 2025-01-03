@@ -50,7 +50,6 @@ const HomePage = ({UserId, UserName}) => {
     }
   }
   const GetPostByPage = async(updown) => {
-    console.log(postcount)
     let maxpage = 1;
     if(postcount > 4){
       maxpage = Math.floor(postcount/4);
@@ -63,7 +62,6 @@ const HomePage = ({UserId, UserName}) => {
       if(newPageNumber<=maxpage){
         PostDataAxios(newPageNumber);
         setpagenumber(newPageNumber);
-        console.log("asfasfas")
       }
     }
     else{
@@ -78,7 +76,6 @@ const HomePage = ({UserId, UserName}) => {
   const posts = Array.isArray(post) 
   ? post.map((x) => <BodyImage key={x.id} Post={x} UserId={UserId} UserName={UserName}/>) 
   : <p>Loading...</p>;
-
 
     return (
       <div className="Main">

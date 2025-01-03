@@ -9,11 +9,15 @@ const BodyImage = ({Post, UserId, UserName}) => {
     const [isLiked, setIsLiked] = useState(false);
     const [image, setimage] = useState();
 
+    const byteToImageUrl = (base64String) => {
+        return `data:image/jpeg;base64,${base64String}`;
+    };
+
     useEffect(() => {
         if(Post.Like && Post.Like.some(like => like.user_id === UserId)){
             setIsLiked(true);
         }
-        setimage(Post.Image ? Post.Image : './images/noimage.png');
+        setimage(Post.Image && Post.Image !== 'AA==' ? byteToImageUrl(Post.Image) : './images/noimage.png');
       }, []); 
       const handleSubmit = (e) => {
         e.preventDefault(); // Formun normal şekilde submit olmasını engelle

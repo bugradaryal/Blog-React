@@ -24,8 +24,32 @@ const PostManager = () => {
       const [pagenumber, setpagenumber] = useState(1);
       const [postcount, setpostcount] = useState(0);
       const [allposts, setallposts] = useState([]);
-      const [selectedData, setSelectedData] = useState(null);  // Seçilen veri
+      const [selectedData, setSelectedData] = useState({});  // Seçilen veri
       const [editmodalopen, seteditmodalopen] = useState(false);
+      const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                const img = new Image();
+                img.onload = () => {
+                    // Canvas oluşturuluyor
+                    const canvas = document.createElement("canvas");
+                    const ctx = canvas.getContext("2d");
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    ctx.drawImage(img, 0, 0);
+    
+                    // Resmi JPEG formatında base64 olarak alıyoruz
+                    const jpegBase64 = canvas.toDataURL("image/jpeg");
+                    setSelectedData((prevData) => ({ ...prevData, image: jpegBase64 }));
+                };
+                img.src = event.target.result;  // base64 verisini yükle
+            };
+            reader.readAsDataURL(file);  // Dosyayı base64 formatında oku
+        }
+    };
+
       const handleeditOpen = (data) => {
         setSelectedData(data);
         seteditmodalopen(true);  // Modal'ı açma fonksiyonu
@@ -44,12 +68,15 @@ const PostManager = () => {
         try{
             const token = localStorage.getItem("authorization"); 
             if(token){
-                axios.post("https://localhost:7197/api/Admin/GetAllPostForModerator",
-                    pageid,
+                axios.get("https://localhost:7197/api/Post/GetAllPostsByIndex",
                     {
-                    headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': token,
+                        params: {
+                            CurrentPage: pageid,
+                            index: 10,
+                        },
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': token,
                     },
                     }).then(response => {
                         if(response && response.status === 200){
@@ -128,7 +155,7 @@ const PostManager = () => {
                 Id: selectedData.id,
                 Title: selectedData.title,
                 Content: selectedData.content,
-                Image: selectedData.image
+                Image: selectedData.image.split(',')[1] || ""
             },
             {
                 headers:{
@@ -155,6 +182,14 @@ const PostManager = () => {
             navigate('/');
         }
     }
+
+    const byteToImageUrl = (base64String) => {
+        if (!base64String.startsWith('data:image/jpeg;base64,')) {
+            return `data:image/jpeg;base64,${base64String}`;
+        }
+        return base64String;
+    };
+ 
     return (
         <div className='postmanagercontainer'>
             <Modal
@@ -163,8 +198,16 @@ const PostManager = () => {
                 aria-labelledby="parent-modal-title"
                 aria-describedby="parent-modal-description">
                 <Box className="myupdatemodal">
-                <TextField onChange={(e) => setSelectedData(prevData => ({ ...prevData, title: e.target.value }))} value={selectedData ? selectedData.title : ""} label="Title" variant="outlined" />
-                <TextField onChange={(e) => setSelectedData(prevData => ({ ...prevData, content: e.target.value }))} value={selectedData ? selectedData.content : ""} multiline minRows={3} maxRows={6} name="Content" label="Content" variant="outlined" />
+                <TextField inputProps={{ maxLength: 250 }} onChange={(e) => setSelectedData(prevData => ({ ...prevData, title: e.target.value }))} value={selectedData ? selectedData.title : ""} label="Title" variant="outlined" />
+                <TextField inputProps={{ maxLength: 1600 }} onChange={(e) => setSelectedData(prevData => ({ ...prevData, content: e.target.value }))} value={selectedData ? selectedData.content : ""} multiline minRows={3} maxRows={6} name="Content" label="Content" variant="outlined" />
+                <input onChange={handleImageChange} type="file" accept="image/*"/>
+                {selectedData.image ? (
+                <img
+                    src={byteToImageUrl(selectedData.image)}
+                    alt="Preview"
+                    style={{ width: "20%", marginTop: "1rem" }}
+                />
+                ): "No İmage"}
                 <Button onClick={updatepost} sx={{backgroundColor:"black"}} className='w-25' variant="contained" size='large'>Update</Button>
                 </Box>
             </Modal>

@@ -28,7 +28,9 @@ html, body{
     align-items: center;
     justify-content: space-between;
     gap: 5rem;
-    padding: 3rem;
+    padding-left: 3rem;
+    padding-right: 3rem;
+    padding-bottom: 3rem;
 }
 
 .blogtitle{
@@ -88,4 +90,11 @@ html, body{
 
 .submitcomment{
     width: 15%;
+}
+
+.quitbutton{
+    display: flex;
+    flex-direction: row-reverse;
+    padding-top: 2rem;
+    padding-right: 3rem;
 }

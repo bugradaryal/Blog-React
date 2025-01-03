@@ -8,6 +8,7 @@ import { format } from 'date-fns';
 import Textarea from '@mui/joy/Textarea';
 import Button from '@mui/material/Button';
 import axios from 'axios';
+import CloseIcon from '@mui/icons-material/Close';
 const Blog = () => {
     const navigate = useNavigate();
     const location = useLocation();
@@ -111,6 +112,7 @@ const Blog = () => {
     return (
         <div className='blogcontainer'>  
             <div className='blogbody'>
+            <div className='quitbutton'><Button onClick={(e) => navigate('/')} variant="text"><CloseIcon sx={{fontSize:"3rem", color:"black"}}/></Button></div>
                 <div className='blogbodyheader'>
                     <div className='flextitle'>
                         <b className='blogtitle h2'>{state.Post.Title}</b>

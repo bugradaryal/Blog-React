@@ -18,11 +18,12 @@ const AddPost = () => {
         e.preventDefault();
         const token = localStorage.getItem("authorization"); 
         if(token){
+            console.log(newpost.Title)
             axios.post("https://localhost:7197/api/Admin/AddPost",
                 {
                     Title: newpost.Title,
                     Content: newpost.Content,
-                    Image: Array.from(newpost.Image),
+                    Image: newpost.Image ? Array.from(newpost.Image) : "",
                 },
                 {
                     headers:{

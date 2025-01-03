@@ -26,3 +26,24 @@ html, body{
     width: 100%;
     flex-direction: row;
 }
+
+.chartflex div {
+    padding: 3rem;
+    width: 100%;
+    height: auto;
+    border: 3px solid black;
+}
+
+.chartusercount{
+    width: 100%;
+    height: 100%;
+}
+
+.counttext{
+    margin: 4rem;
+    padding: 1rem;
+    font-size: 2rem;
+    gap: 1rem;
+    display: flex;
+    align-items: center;
+}

@@ -22,9 +22,10 @@ const HomePage = ({UserId, UserName}) => {
   },[]);
   const PostDataAxios = async(pageid) => {
     try{
-      const response = await axios.get("https://localhost:7197/api/Post/GetAllPosts", {
+      const response = await axios.get("https://localhost:7197/api/Post/GetAllPostsByIndex", {
         params: {
           CurrentPage: pageid,
+          index: 4,
         },
       });
       if (response && response.data && Array.isArray(response.data))

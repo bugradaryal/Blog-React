@@ -2,10 +2,11 @@
     margin: 5px;
     display: flex;
     flex-direction: column;
-    background-color: rgb(226, 226, 227);
+    background-color: rgb(247, 248, 248);
     height: 50rem;
     width: 42%;
-    border-radius: 15px;
+    border:1px solid gray;
+    border-radius: 8px;
     word-wrap:break-word;
 }
 
@@ -20,7 +21,8 @@ hr{
 .imageclass{
     width: 100%;
     height: 100%;
-    border-radius: 5px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
 }
 
 .imagecontainer{

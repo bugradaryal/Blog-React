@@ -227,7 +227,7 @@ function App() {
     handleClose();
     navigate('/Login');
   }
-
+  console.log(user)
   return (
     <div className="App">
       <div className='myheader'>
@@ -236,7 +236,7 @@ function App() {
           {DrawerList}
         </Drawer>
         {
-          user ?
+          user instanceof User && user.Id !== "" ?
           <div className='profile'>
           <Button variant='text' style={{color:"black"}} onClick={handleOpen}>
             <KeyboardArrowDownIcon/>

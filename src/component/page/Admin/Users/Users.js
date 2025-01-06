@@ -16,11 +16,8 @@ const Users = () => {
     const [user,setuser] = useState([]);
     useEffect(() => {
         const token = localStorage.getItem("authorization"); 
-        if(token){}
-        else{
-            navigate('/');
-        }
-        axios.post("https://localhost:7197/api/Admin/GetAllUsers",
+        if(token){
+          axios.post("https://localhost:7197/api/Admin/GetAllUsers",
             {},
             {
               headers: {
@@ -33,6 +30,10 @@ const Users = () => {
                     console.log(response.data)
                 }
             });;
+        }
+        else{
+            navigate('/');
+        }
     },[]);
 
     const suspendUser = async(e,user_id,accountSuspended) => {

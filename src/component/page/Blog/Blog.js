@@ -116,7 +116,7 @@ const Blog = () => {
                 <div className='blogbodyheader'>
                     <div className='flextitle'>
                         <b className='blogtitle h2'>{state.Post.Title}</b>
-                        <p>Date: {format(state.Post.Date, 'dd/MM/yyyy')}</p>
+                        <p>Date: {state.Post.Date && !isNaN(new Date(state.Post.Date)) ? format(new Date(state.Post.Date), 'dd/MM/yyyy - hh:mm') : 'Invalid Date'}</p>
                     </div>
                     <div className='blogimage'>
                         <img alt='Image' className='imageclass' src= {image} loading="lazy"/>    

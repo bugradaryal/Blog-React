@@ -6,7 +6,7 @@ import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import Modal from '@mui/material/Modal';  // Modal'ı içeri aktar
 import Box from '@mui/material/Box';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { redirect, useNavigate } from 'react-router-dom';
 
 const Account = ({user}) => {
     const navigate = useNavigate();
@@ -23,8 +23,12 @@ const Account = ({user}) => {
 
 
     useEffect(() => {
-        if (user) {
+        if ( user && user.Id !== "") {
+            console.log(user)
             setuser(user);
+        }
+        else{
+            navigate('/');
         }
     },[user]); 
 

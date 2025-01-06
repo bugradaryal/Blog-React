@@ -1,5 +1,5 @@
 class Post {
-    constructor(id, Title, Content, Date, Image, Like = [], Comment = []) {
+    constructor(id, Title, Content, Date, Image, Like = [], Comment = [], Category) {
       this.id = id;
       this.Title = Title;
       this.Content = Content;
@@ -7,6 +7,7 @@ class Post {
       this.Image = Image;
       this.Like = Like;
       this.Comment = Comment;
+      this.Category = Category;
     }
   }
   

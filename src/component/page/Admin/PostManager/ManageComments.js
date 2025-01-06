@@ -11,6 +11,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import format from 'date-fns/format';
 
 const ManageComments = () => {
     const location = useLocation();
@@ -76,7 +77,7 @@ const ManageComments = () => {
                             {row.userName}
                         </TableCell>
                         <TableCell align="left">{row.content.substring(0,50)}</TableCell>
-                        <TableCell align="left">{row.date}</TableCell>
+                        <TableCell align="left">{row.date && !isNaN(new Date(row.date)) ? format(new Date(row.date), 'dd/MM/yyyy - hh:mm') : 'Invalid Date'}</TableCell>
                         <TableCell align="right"><Button onClick={(e) => deletecomment(e, row.id)} sx={{backgroundColor:"#ec5353"}} size="small" variant="outlined">Delete</Button> </TableCell>
                         </TableRow>
                     )) : <p className='m-4'>No Comment</p>}

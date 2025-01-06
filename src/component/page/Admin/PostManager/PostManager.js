@@ -19,6 +19,10 @@ import Modal from '@mui/material/Modal';  // Modal'ı içeri aktar
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Textarea from '@mui/joy/Textarea';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 
 const PostManager = () => {
       const [pagenumber, setpagenumber] = useState(1);
@@ -51,6 +55,7 @@ const PostManager = () => {
     };
 
       const handleeditOpen = (data) => {
+        console.log(data)
         setSelectedData(data);
         seteditmodalopen(true);  // Modal'ı açma fonksiyonu
       }
@@ -155,7 +160,8 @@ const PostManager = () => {
                 Id: selectedData.id,
                 Title: selectedData.title,
                 Content: selectedData.content,
-                Image: selectedData.image.split(',')[1] || ""
+                Image: selectedData.image.split(',')[1] || "",
+                Category: selectedData.categories.name
             },
             {
                 headers:{
@@ -189,7 +195,6 @@ const PostManager = () => {
         }
         return base64String;
     };
- 
     return (
         <div className='postmanagercontainer'>
             <Modal
@@ -200,6 +205,24 @@ const PostManager = () => {
                 <Box className="myupdatemodal">
                 <TextField inputProps={{ maxLength: 250 }} onChange={(e) => setSelectedData(prevData => ({ ...prevData, title: e.target.value }))} value={selectedData ? selectedData.title : ""} label="Title" variant="outlined" />
                 <TextField inputProps={{ maxLength: 1600 }} onChange={(e) => setSelectedData(prevData => ({ ...prevData, content: e.target.value }))} value={selectedData ? selectedData.content : ""} multiline minRows={3} maxRows={6} name="Content" label="Content" variant="outlined" />
+                <FormControl fullWidth variant="outlined" sx={{ width:"30%" }}>
+                <InputLabel id="demo-simple-select-label">Category</InputLabel>
+                <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={selectedData.categories ? selectedData.categories.name : ""}
+                    onChange={(e) => setSelectedData(prevData => ({ ...prevData, categories: {name: e.target.value }}))}
+                    label="Category" // Bu, InputLabel ile eşleşmeli
+                >
+                    <MenuItem value={"Personal"}>Personal</MenuItem>
+                    <MenuItem value={"Travel"}>Travel</MenuItem>
+                    <MenuItem value={"Lifestyle"}>Lifestyle</MenuItem>
+                    <MenuItem value={"News"}>News</MenuItem>
+                    <MenuItem value={"Marketing"}>Marketing</MenuItem>
+                    <MenuItem value={"Sports"}>Sports</MenuItem>
+                    <MenuItem value={"Movies"}>Movies</MenuItem>
+                </Select>
+                </FormControl>
                 <input onChange={handleImageChange} type="file" accept="image/*"/>
                 {selectedData.image ? (
                 <img
@@ -222,6 +245,7 @@ const PostManager = () => {
                     <TableCell align="left"><b>Post Id</b></TableCell>
                     <TableCell align="left"><b>Title</b></TableCell>
                     <TableCell align="left"><b>Date</b></TableCell>
+                    <TableCell align="left"><b>Category</b></TableCell>
                     <TableCell align="right"><b>Actions-Etc</b></TableCell>
                 </TableRow>
                 </TableHead>
@@ -235,7 +259,8 @@ const PostManager = () => {
                             {row.id}
                         </TableCell>
                         <TableCell align="left">{row.title.substring(0,120)}</TableCell>
-                        <TableCell align="left">{format(row.date, 'dd/MM/yyyy - hh:mm')}</TableCell>
+                        <TableCell align="left">{row.date && !isNaN(new Date(row.date)) ? format(new Date(row.date), 'dd/MM/yyyy - hh:mm') : 'Invalid Date'}</TableCell>
+                        <TableCell align="left">{row.categories.name}</TableCell>
                         <TableCell align="right" sx={{display:"flex",gap:"0.6rem"}}>
                         <Button onClick={()=>handleeditOpen(row)} sx={{backgroundColor:"lightblue"}} size="small" variant="outlined">Edit</Button>
                         <Button onClick={(e) => deletepost(e, row.id)} sx={{backgroundColor:"#ec5353"}} size="small" variant="outlined">Delete</Button> 

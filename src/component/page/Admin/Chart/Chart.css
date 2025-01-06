@@ -47,3 +47,13 @@ html, body{
     display: flex;
     align-items: center;
 }
+
+.chartinputs{
+    padding: 1.5rem;
+    background-color: lightgray;
+    display: flex;
+    flex-direction: row;
+    gap: 2rem;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}

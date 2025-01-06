@@ -14,6 +14,7 @@ const BodyImage = ({Post, UserId, UserName}) => {
     };
 
     useEffect(() => {
+        console.log(Post)
         if(Post.Like && Post.Like.some(like => like.user_id === UserId)){
             setIsLiked(true);
         }
@@ -30,28 +31,28 @@ const BodyImage = ({Post, UserId, UserName}) => {
           },
         });
       };
-
     return (
-        <form className="liste" onSubmit={handleSubmit}>
-            <div className='imagecontainer'>
-                <img alt='Image' className='imageclass' src= {image} loading="lazy"/>    
-            </div>
-            <div className='contentcontainerforbody'>
-                <div className='hr'></div>
-                <div>
-                    <p className='h5'> {Post.Title}</p>
+            <form className="liste" onSubmit={handleSubmit}>
+                    <div className='imagecontainer'>
+                    <img alt='Image' className='imageclass' src= {image} loading="lazy"/>    
                 </div>
-                <div>
-                    <p className='paragraph mt-3'>{Post.Content.substr(0,220)}</p>
+                <div className='contentcontainerforbody'>
+                    <div className='hr'></div>
+                        <p style={{color:"gray"}}>{Post.Category}</p>
+                    <div>
+                        <p className='h5'> {Post.Title}</p>
+                    </div>
+                    <div>
+                        <p className='paragraph mt-3'>{Post.Content.substring(0,120)}</p>
+                    </div>
+                    <div>
+                        <button type="submit"  className="btn btn-primary readbutton">Read</button>
+                    </div>
+                    <div className='hr'></div>
+                    <div className='likecomment'>
+                        <p><MessageIcon/>: <b>{Post.Comment ? Post.Comment.length : 0}</b></p> <p id='likedislike'><ThumbUpAltIcon style={{color: isLiked ? "#3B71CA" : "black" }}/>: <b style={{color: isLiked ? "#3B71CA" : "black" }}>{Post.Like ? Post.Like.length : 0}</b></p>
+                    </div> 
                 </div>
-                <div>
-                    <button type="submit"  className="btn btn-primary readbutton">Read</button>
-                </div>
-                <div className='hr'></div>
-                <div className='likecomment'>
-                    <p><MessageIcon/>: <b>{Post.Comment ? Post.Comment.length : 0}</b></p> <p id='likedislike'><ThumbUpAltIcon style={{color: isLiked ? "#3B71CA" : "black" }}/>: <b style={{color: isLiked ? "#3B71CA" : "black" }}>{Post.Like ? Post.Like.length : 0}</b></p>
-                </div>
-            </div>
         </form>
     );
 };

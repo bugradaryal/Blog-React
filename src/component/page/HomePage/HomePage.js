@@ -19,6 +19,7 @@ const HomePage = ({UserId, UserName}) => {
   const [searchvalue, setsearchvalue] = useState("");
   const [holdpost, setholdpost] = useState([]);
   const [category, setcategory] = useState();
+  const [isfilteder, setisfiltered] = useState(false);
   
   useEffect(() => {
     PostDataAxios(1);
@@ -37,7 +38,7 @@ const HomePage = ({UserId, UserName}) => {
       if (response && response.data && Array.isArray(response.data))
       {
         const posts = response.data.map(postData => {
-          const Category = postData.category.name;
+          const Category = postData.categories ? postData.categories.name : "";
           const likes = postData.likes ? postData.likes.map(likeData => new Like(likeData.id, likeData.user_id, likeData.post_id)) : [];
           const comments = postData.comments ? postData.comments.map(comData => new Comment(comData.id, comData.content, comData.userName)) : [];
           return new Post(
@@ -51,6 +52,7 @@ const HomePage = ({UserId, UserName}) => {
             Category
           );
         });
+        console.log(posts)
         setholdpost(posts);
         setpost(posts);
       }
@@ -60,6 +62,7 @@ const HomePage = ({UserId, UserName}) => {
     }
   }
   const GetPostByPage = async(updown) => {
+    const dummyEvent = { preventDefault: () => {} };
     let maxpage = 1;
     if(postcount > 4){
       maxpage = Math.floor(postcount/4);
@@ -70,14 +73,24 @@ const HomePage = ({UserId, UserName}) => {
     if(updown){
       const newPageNumber = pagenumber + 1;
       if(newPageNumber<=maxpage){
-        PostDataAxios(newPageNumber);
+        if(!isfilteder){
+          PostDataAxios(newPageNumber);
+        }
+        else{
+          postsearchbytitle(dummyEvent,newPageNumber);
+        }
         setpagenumber(newPageNumber);
       }
     }
     else{
       if(pagenumber > 1){
         const newPageNumber = pagenumber - 1;
-        PostDataAxios(newPageNumber);
+        if(!isfilteder){
+          PostDataAxios(newPageNumber);
+        }
+        else{
+          postsearchbytitle(dummyEvent,newPageNumber);
+        }
         setpagenumber(newPageNumber);
       }
     }
@@ -87,32 +100,64 @@ const HomePage = ({UserId, UserName}) => {
   ? post.map((x) => <BodyImage key={x.id} Post={x} UserId={UserId} UserName={UserName}/>) 
   : <p>Loading...</p>;
 
-  const postsearchbytitle = async(e) => {
-    e.preventDefault();
-    if(searchvalue !== ""){
-      try{
-        setpost(post.map(data => data.title === searchvalue));
-      }
-      catch(error){
-        console.error(error.response.data)
-      }
+  const postsearchbytitle = async(e, index = 1) => {
+    if (e && typeof e.preventDefault === 'function') {
+      e.preventDefault();
+    }
+    if (searchvalue !== "") {
+      console.log(index)
+      axios.get("https://localhost:7197/api/Post/GetPostBySearch",{
+        params:{
+          search:searchvalue,
+          index: index
+        }
+      }).then(response => {
+        if(response && response.status===200){
+          const posts = response.data.map(postData => {
+            const Category = postData.categories ? postData.categories.name : "";
+            const likes = postData.likes ? postData.likes.map(likeData => new Like(likeData.id, likeData.user_id, likeData.post_id)) : [];
+            const comments = postData.comments ? postData.comments.map(comData => new Comment(comData.id, comData.content, comData.userName)) : [];
+            return new Post(
+              postData.id,
+              postData.title,
+              postData.content,
+              postData.date,
+              postData.image,
+              likes,
+              comments,
+              Category
+            );
+          });
+          console.log(posts)
+          setisfiltered(true);
+          setpost(posts);
+        }
+        }
+      ).catch(error => {
+        console.error(error.response.data);
+      });
     }
     else{
+      setisfiltered(false);
       setpost(holdpost);
+      setpagenumber(1);
     }
   }
   const postbycategories = async(e) => {
     e.preventDefault();
-    if(category !== "" || category !== "Default"){
+    const cpost = holdpost;
+    setpagenumber(1);
+    if(category !== "" && category !== "Default"){
       try{
-        setpost(post.map(data => data.Category === category));
+        console.log(category)
+        setpost(cpost.filter(data => data.Category === category));
       }
       catch(error){
         console.error(error.response.data)
       }
     }
     else{
-      setpost(holdpost);
+      setpost(cpost)
     }
   }
 

@@ -11,9 +11,11 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import User from '../../../../models/User';
 import Button from '@mui/material/Button';
+import { useTranslation } from "react-i18next";
 const Users = () => {
     const navigate = useNavigate();
     const [user,setuser] = useState([]);
+        const { t } = useTranslation("admintable");
     useEffect(() => {
         const token = localStorage.getItem("authorization"); 
         if(token){
@@ -69,9 +71,9 @@ const Users = () => {
         <TableHead>
           <TableRow>
             <TableCell align="left"><b>UserId</b></TableCell>
-            <TableCell align="left"><b>UserName</b></TableCell>
-            <TableCell align="left"><b>E-mail</b></TableCell>
-            <TableCell align="right"><b>Actions-Etc</b></TableCell>
+            <TableCell align="left"><b>{t("username")}</b></TableCell>
+            <TableCell align="left"><b>{t("email")}</b></TableCell>
+            <TableCell align="right"><b>{t("actions")}</b></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -85,7 +87,7 @@ const Users = () => {
               </TableCell>
               <TableCell align="left">{row.userName}</TableCell>
               <TableCell align="left">{row.email}</TableCell>
-              <TableCell align="right"><Button onClick={(e) => suspendUser(e, row.id, row.accountSuspended)} size="small" style={{backgroundColor: !row.accountSuspended ? "lightgreen" : "#ec5353"}} variant="outlined">Suspend</Button></TableCell>
+              <TableCell align="right"><Button onClick={(e) => suspendUser(e, row.id, row.accountSuspended)} size="small" style={{backgroundColor: !row.accountSuspended ? "lightgreen" : "#ec5353"}} variant="outlined">{t("suspend")}</Button></TableCell>
               
             </TableRow>
           ))}

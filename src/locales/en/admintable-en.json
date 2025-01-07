@@ -25,5 +25,9 @@
         "updatebutton": "Update",
         "addpostbutton": "Add New Post",
         "noimage": "No Image",
-        "addpost": "Add Post"
+        "addpost": "Add Post",
+        "username": "User Name",
+        "nocoment": "No Comment",
+        "suspend": "Suspend",
+        "email":"Email"
 }

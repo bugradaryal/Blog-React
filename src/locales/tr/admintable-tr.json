@@ -25,5 +25,9 @@
         "updatebutton": "Güncelle",
         "addpostbutton": "Yeni Gönderi Ekle",
         "noimage": "Resim Yok",
-        "addpost": "Post Ekle"
+        "addpost": "Post Ekle",
+        "username": "Kullanıcı Adı",
+        "nocoment": "Yorum yok",
+        "suspend": "Uzaklaştır",
+        "email":"Eposta"
 }

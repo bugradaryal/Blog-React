@@ -68,6 +68,8 @@ const PostManager = () => {
             PostDataAxios(1);
             axios.get("https://localhost:7197/api/Post/GetPostCounts").then(response => {
                 response ? setpostcount(response.data) : setpostcount(0);
+              }).catch(error =>{
+                console.error(error.response.data);
               });
     },[]);
     const PostDataAxios = async(pageid) => {

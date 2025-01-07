@@ -66,7 +66,6 @@ const getstatistic = async(e) => {
         console.log("Dates not valid!")
     }
 }
-
     useEffect(() => {
         getstatistic();
     }, []);

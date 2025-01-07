@@ -12,6 +12,7 @@ import Paper from '@mui/material/Paper';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import format from 'date-fns/format';
+import { useTranslation } from "react-i18next";
 
 const ManageComments = () => {
     const location = useLocation();
@@ -49,7 +50,7 @@ const ManageComments = () => {
             navigate('/')
         }
     }
-
+    const { t } = useTranslation("admintable");
     return (
         <div className='managecommcontainer'>
             <div className='managecommbody'>
@@ -61,10 +62,10 @@ const ManageComments = () => {
                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
                     <TableHead>
                     <TableRow>
-                        <TableCell align="left"><b>User Name</b></TableCell>
-                        <TableCell align="left"><b>Content</b></TableCell>
-                        <TableCell align="left"><b>Date</b></TableCell>
-                        <TableCell align="right"><b>Actions-Etc</b></TableCell>
+                        <TableCell align="left"><b>{t("username")}</b></TableCell>
+                        <TableCell align="left"><b>{t("content")}</b></TableCell>
+                        <TableCell align="left"><b>{t("date")}</b></TableCell>
+                        <TableCell align="right"><b>{t("actions")}</b></TableCell>
                     </TableRow>
                     </TableHead>
                     <TableBody>
@@ -78,9 +79,9 @@ const ManageComments = () => {
                         </TableCell>
                         <TableCell align="left">{row.content.substring(0,50)}</TableCell>
                         <TableCell align="left">{row.date && !isNaN(new Date(row.date)) ? format(new Date(row.date), 'dd/MM/yyyy - hh:mm') : 'Invalid Date'}</TableCell>
-                        <TableCell align="right"><Button onClick={(e) => deletecomment(e, row.id)} sx={{backgroundColor:"#ec5353"}} size="small" variant="outlined">Delete</Button> </TableCell>
+                        <TableCell align="right"><Button onClick={(e) => deletecomment(e, row.id)} sx={{backgroundColor:"#ec5353"}} size="small" variant="outlined">{t("managerdelete")}</Button> </TableCell>
                         </TableRow>
-                    )) : <p className='m-4'>No Comment</p>}
+                    )) : <p className='m-4'>{t("nocomment")}</p>}
                     </TableBody>
                 </Table>
                 </TableContainer>

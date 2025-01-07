@@ -27,8 +27,6 @@ const EmailVerification = () => {
                 console.log(error.response.data.errors);
             });
         }
-        console.log(userId);
-        console.log(emailConfUrl);
     },[])
     return (
         <div className='verificationcontainer'>

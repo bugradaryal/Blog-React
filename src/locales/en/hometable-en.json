@@ -1,5 +1,12 @@
 {
     "Language":"Language",
     "Account":"My Account",
-    "LogOut":"Log Out"
+    "LogOut":"Log Out",
+    "Chart":"Chart",
+    "Users":"Users",
+    "PostM": "Post Manager",
+    "Home": "Home",
+    "Login": "Login",
+    "About": "About Us",
+    "Contact": "Contact Us"
 }

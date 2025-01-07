@@ -88,7 +88,6 @@ function App() {
   }
 
    const ValidateToken = async(token) => {
-    try{
       await axios.post("https://localhost:7197/api/Auth/ValidateToken",
         {},
         {
@@ -118,12 +117,10 @@ function App() {
         }).catch(error => {
           localStorage.removeItem("authorization");
           console.error("Error during Authorization request:", error.response.data.message);
-        });;
-    }
-    catch(error){
-      localStorage.removeItem("authorization");
-      console.log("Cant get auth resources!  -  "+ error)
-    }
+        }).catch(error => {
+          localStorage.removeItem("authorization");
+          console.log("Cant get auth resources!  -  "+ error)
+        });
   }
 
   useEffect(() => {
@@ -201,20 +198,20 @@ function App() {
 
   let adminpage = [];
   if(user && role === "Administrator"){
-    adminpage = ['Chart', 'Users', "Post Manager"];
+    adminpage = [t("Chart"), t("Users"), t("PostM")];
   }
 
   const DrawerList = (
     <Box sx={{ width: 250 }} role="presentation" onClick={toggleDrawer(false)}>
       <List>
-        {['Home', 'Login', 'About Us', 'Contact Us'].map((text, index) => (
+        {[t("Home"), t("Login"), t("About"), t("Contact")].map((text, index) => (
           <ListItem key={text} disablePadding>
             <ListItemButton onClick={() => {
               // Sayfa geçişi yapılır
-              if (text === 'Home') navigate('/');
-              if (text === 'Login') navigate('./Login'); // Gerekirse yeni bir sayfa ekleyin
-              if (text === 'About Us') navigate("/AboutUs");
-              if (text === 'Contact Us') navigate('/ContactUs'); // Gerekirse yeni bir sayfa ekleyin
+              if (text === t("Home")) navigate('/');
+              if (text === t("Login")) navigate('./Login'); // Gerekirse yeni bir sayfa ekleyin
+              if (text === t("About")) navigate("/AboutUs");
+              if (text === t("Contact")) navigate('/ContactUs'); // Gerekirse yeni bir sayfa ekleyin
             }}>
               <ListItemIcon>
                   {index % 4 === 0 ? <HomeIcon /> : index % 4 === 1 ? <LoginIcon /> : index % 4 === 2 ? <AutoAwesomeMotionIcon /> : <CallIcon />}
@@ -230,9 +227,9 @@ function App() {
           <ListItem key={text} disablePadding>
             <ListItemButton onClick={() => {
               // Sayfa geçişi yapılır
-              if (text === 'Users') navigate('/Admin/Users');
-              if (text === 'Post Manager') navigate('/Admin/PostManager');
-              if(text === 'Chart') navigate('/Admin/Chart');
+              if (text === t("Users")) navigate('/Admin/Users');
+              if (text === t("PostM")) navigate('/Admin/PostManager');
+              if(text === t("Chart")) navigate('/Admin/Chart');
             }}>
               <ListItemIcon>
                 {index % 3 === 0 ? <BarChartIcon /> : index % 3 === 1 ? <PeopleAltIcon /> : <PostAddIcon/>}

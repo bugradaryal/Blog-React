@@ -31,6 +31,8 @@ const Users = () => {
                     setuser(response.data);
                     console.log(response.data)
                 }
+            }).catch(error => {
+              console.error(error.response.data);
             });;
         }
         else{
@@ -56,6 +58,8 @@ const Users = () => {
           if(response && response.status === 200){
             setuser(prevuser => prevuser.map(u=> u.id === user_id ? {...u, accountSuspended: suspend} : u));
           }
+        }).catch(error => {
+          console.error(error.response.data);
         });
       }
       else{

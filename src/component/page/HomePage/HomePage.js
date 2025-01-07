@@ -26,40 +26,41 @@ const HomePage = ({UserId, UserName}) => {
     PostDataAxios(1);
     axios.get("https://localhost:7197/api/Post/GetPostCounts").then(response => {
       response ? setpostcount(response.data) : setpostcount(0);
+    }).catch(error => {
+      console.error(error.response.data);
     });
   },[]);
   const PostDataAxios = async(pageid) => {
-    try{
-      const response = await axios.get("https://localhost:7197/api/Post/GetAllPostsByIndex", {
+      await axios.get("https://localhost:7197/api/Post/GetAllPostsByIndex", {
         params: {
           CurrentPage: pageid,
           index: 4,
         },
+      }).then(response => {
+        if (response && response.data && Array.isArray(response.data))
+        {
+          const posts = response.data.map(postData => {
+            const Category = postData.categories ? postData.categories.name : "";
+            const likes = postData.likes ? postData.likes.map(likeData => new Like(likeData.id, likeData.user_id, likeData.post_id)) : [];
+            const comments = postData.comments ? postData.comments.map(comData => new Comment(comData.id, comData.content, comData.userName)) : [];
+            return new Post(
+              postData.id,
+              postData.title,
+              postData.content,
+              postData.date,
+              postData.image,
+              likes,
+              comments,
+              Category
+            );
+          });
+          setholdpost(posts);
+          setpost(posts);
+        }
+      }).catch(error => {
+        console.error(error.response.data);
       });
-      if (response && response.data && Array.isArray(response.data))
-      {
-        const posts = response.data.map(postData => {
-          const Category = postData.categories ? postData.categories.name : "";
-          const likes = postData.likes ? postData.likes.map(likeData => new Like(likeData.id, likeData.user_id, likeData.post_id)) : [];
-          const comments = postData.comments ? postData.comments.map(comData => new Comment(comData.id, comData.content, comData.userName)) : [];
-          return new Post(
-            postData.id,
-            postData.title,
-            postData.content,
-            postData.date,
-            postData.image,
-            likes,
-            comments,
-            Category
-          );
-        });
-        setholdpost(posts);
-        setpost(posts);
-      }
-    }
-    catch(error){
-      console.log("Cant get post resources!   -   "+error)
-    }
+
   }
   const GetPostByPage = async(updown) => {
     const dummyEvent = { preventDefault: () => {} };

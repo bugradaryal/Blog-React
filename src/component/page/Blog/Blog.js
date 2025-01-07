@@ -25,7 +25,6 @@ const Blog = () => {
     const [image, setimage] = useState(state.Post.Image && state.Post.Image !== 'AA==' ? byteToImageUrl(state.Post.Image) : './images/noimage.png');
     const writecoment = async(e) => {
         e.preventDefault();
-        try{
             const token = localStorage.getItem("authorization"); 
             if(token){
                 await axios.post("https://localhost:7197/api/Comment/AddCommentToPost",{
@@ -46,28 +45,25 @@ const Blog = () => {
                         setcommentcount(commentcount+1)
                         setcontent("");
                     }
+                }).catch(error => {
+                    console.error(error.response.data);
                 });
             }
             else{
                 navigate('/');
             }
-        }
-        catch(error){
-            console.error(error)
-        }
     }
     const likedislike = async(e) => {
         e.preventDefault();
-        try{
             const token = localStorage.getItem("authorization"); 
             if(token){
                 const holdvalue = !isLiked;
                 if(holdvalue){
-                    await axios.post("https://localhost:7197/api/Post/LikeThePost", null, {
-                        params: {
-                            userId: state.UserId,
-                            postId: state.Post.id
-                        },
+                    await axios.post("https://localhost:7197/api/Post/LikeThePost",{
+                        UserId: state.UserId,
+                        PostId: state.Post.id
+                    },
+                    {
                         headers: {
                             'Content-Type': 'application/json',
                             'Authorization': token,
@@ -82,16 +78,16 @@ const Blog = () => {
                     });
                 }
                 else{
-                    await axios.post("https://localhost:7197/api/Post/DislikeThePost", null, {
-                        params: {
-                            userId: state.UserId,
-                            postId: state.Post.id
+                    await axios.post("https://localhost:7197/api/Post/DislikeThePost", {
+                            UserId: state.UserId,
+                            PostId: state.Post.id
                         },
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': token,
-                        },
-                    }).then(response => {
+                        {
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': token,
+                            },
+                        }).then(response => {
                         if(response && response.status === 200){
                             setlikecount(likecount-1);
                             setIsLiked(false);  
@@ -104,10 +100,6 @@ const Blog = () => {
             else{
                 navigate('/Login');
             }
-        }
-        catch(error){
-            console.error(error);
-        }
     };
     const { t } = useTranslation("blogtable");
     return (

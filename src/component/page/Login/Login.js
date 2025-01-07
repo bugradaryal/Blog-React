@@ -18,33 +18,32 @@ const Login = () => {
         e.preventDefault();
         setmessage('');
     
-        try {
-          const response = await axios.post('https://localhost:7197/api/Auth/Login', {
+          await axios.post('https://localhost:7197/api/Auth/Login', {
             email,
             password,
             headers: {
               'Content-Type': 'application/json',
             },
+          }).then(response => {
+            if(response && response.status === 200){
+              const authorization = response.headers['authorization'];  // Küçük harf ile 'jwttoken'
+              const refreshToken = response.headers['refreshtoken']; // Küçük harf ile 'refreshtoken'
+
+              if (authorization && refreshToken) {
+                  // Token'ları localStorage'a kaydet
+                  localStorage.setItem('authorization', authorization);
+                  localStorage.setItem('refreshToken', refreshToken);
+                } else {
+                  console.error('Tokenlar alınamadı.');
+                  navigate('/Login');
+                }
+              // Başarılı giriş sonrası yönlendirme
+              console.log('Login successful:', response.data);
+              navigate('/');
+            }
           });
           
-          const authorization = response.headers['authorization'];  // Küçük harf ile 'jwttoken'
-          const refreshToken = response.headers['refreshtoken']; // Küçük harf ile 'refreshtoken'
 
-          if (authorization && refreshToken) {
-              // Token'ları localStorage'a kaydet
-              localStorage.setItem('authorization', authorization);
-              localStorage.setItem('refreshToken', refreshToken);
-            } else {
-              console.error('Tokenlar alınamadı.');
-              navigate('/Login');
-            }
-          // Başarılı giriş sonrası yönlendirme
-          console.log('Login successful:', response.data);
-          navigate('/');
-        } catch (err) {
-          console.error('Login error:', err);
-          setmessage(err.response?.data?.message || 'Login failed. Please try again.');
-        }
       };
     return (
         <div className='logincontainer'>

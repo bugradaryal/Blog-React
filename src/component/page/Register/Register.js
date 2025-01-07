@@ -22,7 +22,6 @@ const Register = () => {
     const handleRegister = async (e) => {
         e.preventDefault();
         setmessage('');
-        try {
             const confirmPassword = confirmPasswordRef.current.value; // Ref'ten değer doğru şekilde alınıyor.
             if (Password !== confirmPassword) {
                 setmessage('Passwords do not match. Please try again.');
@@ -59,12 +58,10 @@ const Register = () => {
                         navigate('/Login')
                       }, 3000)
                 }
+            }).catch(error => {
+                console.error('Register error:', error);
+                setmessage(error.response?.data?.message || 'Register failed. Please try again.');
             });
-        }
-        catch (err) {
-            console.error('Register error:', err);
-            setmessage(err.response?.data?.message || 'Register failed. Please try again.');
-        }
     }
 
     const truePhoneNumber = (e) => {

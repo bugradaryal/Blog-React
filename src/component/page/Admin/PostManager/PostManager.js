@@ -73,7 +73,6 @@ const PostManager = () => {
               });
     },[]);
     const PostDataAxios = async(pageid) => {
-        try{
             const token = localStorage.getItem("authorization"); 
             if(token){
                 axios.get("https://localhost:7197/api/Post/GetAllPostsByIndex",
@@ -98,10 +97,6 @@ const PostManager = () => {
             else{
                 navigate('/');
             }
-        }
-        catch(error){
-          console.error(error.response.data.errors);
-        }
       }
     const GetPostByPage = async(updown) => {
         console.log(postcount)

@@ -1,5 +1,12 @@
 {
     "Language":"Dil:",
     "Account":"Hesabım",
-    "LogOut":"Çıkış"
+    "LogOut":"Çıkış",
+    "Chart":"Grafik",
+    "Users":"Kullanıcılar",
+    "PostM": "Post Yöneticisi",
+    "Home": "Ana Sayfa",
+    "Login": "Giriş",
+    "About": "Hakkımızda",
+    "Contact": "Bize Ulaşın"
 }

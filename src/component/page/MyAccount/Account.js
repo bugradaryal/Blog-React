@@ -37,7 +37,6 @@ const Account = ({user}) => {
         handledeleteClose();
         const token = localStorage.getItem("authorization"); 
         if(token){
-            try{
                 console.log(user)
                 await axios.delete("https://localhost:7197/api/User/DeleteAccount",{
                     data: user.Id ,
@@ -52,11 +51,9 @@ const Account = ({user}) => {
                         setuser("");
                         navigate('/Login');
                     }
+                }).catch(error => {
+                    console.error(error.response.data)
                 });
-            }
-            catch(error){
-                console.error(error.response.data.errors)
-            }
         }
         else{
             navigate('/Login');
@@ -67,7 +64,6 @@ const Account = ({user}) => {
         e.preventDefault();
         const token = localStorage.getItem("authorization"); 
         if(token){
-            try{
                 await axios.put("https://localhost:7197/api/User/UpdateAccount",    
                     {...getuser},   
                     {         
@@ -82,11 +78,9 @@ const Account = ({user}) => {
                     else{
                         navigate('/');
                     }
+                }).catch(error => {
+                    console.error(error.response.data);
                 });
-            }
-            catch(error){
-                console.error(error.response.data.errors)
-            }
         }
         else{
             navigate('/Login');
@@ -101,7 +95,6 @@ const Account = ({user}) => {
         if(newpassword === confnewpassword){
             const token = localStorage.getItem("authorization"); 
             if(token){
-                try{
                     await axios.put("https://localhost:7197/api/User/ChangePassword", 
                         {
                             user_id: getuser.Id,
@@ -121,11 +114,9 @@ const Account = ({user}) => {
                         else{
                             setpassmessage("Password can't changed!!");
                         }
+                    }).catch(error => {
+                        console.error(error.response.data);
                     });
-                }
-                catch(error){
-                    console.error(error.response.data.errors)
-                }
             }
             else{
                 navigate("/");

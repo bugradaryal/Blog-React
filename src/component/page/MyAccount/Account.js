@@ -7,6 +7,7 @@ import Modal from '@mui/material/Modal';  // Modal'ı içeri aktar
 import Box from '@mui/material/Box';
 import axios from 'axios';
 import { redirect, useNavigate } from 'react-router-dom';
+import { useTranslation } from "react-i18next";
 
 const Account = ({user}) => {
     const navigate = useNavigate();
@@ -20,7 +21,7 @@ const Account = ({user}) => {
         confnewpassword: "",
     });
     const [passmessage, setpassmessage] = useState("");
-
+    const { t } = useTranslation("accounttable");
 
     useEffect(() => {
         if ( user && user.Id !== "") {
@@ -146,8 +147,8 @@ const Account = ({user}) => {
                 aria-describedby="parent-modal-description"
             >
                 <Box className="mydeletemodal">
-                    <b>Your account will be deleted after this action. This process is irreversible!</b>
-                    <Button onClick={deleteaccount} sx={{backgroundColor:"darkred"}} className='w-50' variant="contained" size='large'>Delete Account</Button>
+                    <b>{t("deletemodaltext")}</b>
+                    <Button onClick={deleteaccount} sx={{backgroundColor:"darkred"}} className='w-50' variant="contained" size='large'>{t("deletebutton")}</Button>
                 </Box>
             </Modal>
             <div className='accountbody'>
@@ -156,32 +157,32 @@ const Account = ({user}) => {
                         <div className='accountfields'>
                         <TextField slotProps={{input: {readOnly: true}}}  type='email' value={getuser.Email} variant="standard" />
                         <TextField onChange={(e) => setuser(prevState => ({ ...prevState, UserName: e.target.value }))} type='text' value={getuser.UserName} variant="standard" />
-                        <TextField onChange={(e) => setuser(prevState => ({ ...prevState, PhoneNumber: e.target.value }))} type='tel' value={getuser.PhoneNumber} label={!getuser.PhoneNumber ? "Phone Number" : ""} variant="standard" />
+                        <TextField onChange={(e) => setuser(prevState => ({ ...prevState, PhoneNumber: e.target.value }))} type='tel' value={getuser.PhoneNumber} label={!getuser.PhoneNumber ? t("phonenum") : ""} variant="standard" />
                         <TextField onChange={(e) => setuser(prevState => ({ ...prevState, Name: e.target.value }))} type='text' value={getuser.Name} variant="standard" />
                         <TextField onChange={(e) => setuser(prevState => ({ ...prevState, SurName: e.target.value }))} type='text' value={getuser.SurName} variant="standard" />
-                        <TextField onChange={(e) => setuser(prevState => ({ ...prevState, Address: e.target.value }))} type='text' value={getuser.Address} label={!getuser.Address ? "Address" : ""} variant="standard" />
+                        <TextField onChange={(e) => setuser(prevState => ({ ...prevState, Address: e.target.value }))} type='text' value={getuser.Address} label={!getuser.Address ? t("address") : ""} variant="standard" />
                         </div>
                         <div>
                             <AccountBoxIcon sx={{width:"100%", height:"100%"}}/>
                         </div>
                     </div>
                     <div className='accountbuttons'>
-                    <Button type='submit' sx={{backgroundColor:"cornflowerblue"}} variant="contained" size='large'>Edit Account</Button>
-                    <Button type='button' onClick={handledeleteOpen} sx={{backgroundColor:"darkred"}}  variant="contained" size='large'>Delete Account</Button>
+                    <Button type='submit' sx={{backgroundColor:"cornflowerblue"}} variant="contained" size='large'>{t("editaccountbutton")}</Button>
+                    <Button type='button' onClick={handledeleteOpen} sx={{backgroundColor:"darkred"}}  variant="contained" size='large'>{t("deleteaccountbutton")}</Button>
                     </div>
                 </form>
                 <form className='bottomaccountbody' onSubmit={changepassword}>
                     <div className='d-flex flex-row justify-content-between w-100 gap-5'>
-                        <TextField className='w-50' type='password' onChange={(e) => setPasswords({ ...passwords, oldpassword: e.target.value })} label="Old Password" variant="standard" required/>
-                        <TextField className='w-50' type='password' onChange={(e) => setPasswords({ ...passwords, newpassword: e.target.value })} label="New Password" variant="standard" required/>
+                        <TextField className='w-50' type='password' onChange={(e) => setPasswords({ ...passwords, oldpassword: e.target.value })} label={t("oldpass")} variant="standard" required/>
+                        <TextField className='w-50' type='password' onChange={(e) => setPasswords({ ...passwords, newpassword: e.target.value })} label={t("newpass")} variant="standard" required/>
                     </div>
                     <div className='d-flex flex-row w-100 gap-5'>
-                        <TextField className='w-50' type='password' onChange={(e) => setPasswords({ ...passwords, confnewpassword: e.target.value })} label="Confirm New Password" variant="standard" required/>   
+                        <TextField className='w-50' type='password' onChange={(e) => setPasswords({ ...passwords, confnewpassword: e.target.value })} label={t("confpass")} variant="standard" required/>   
                         <div className='w-50'></div>
                     </div>
                     <b className='text-danger m-2'>{passmessage}</b>
                     <div className='w-25 mt-3'>
-                        <Button type='submit' sx={{backgroundColor:"black"}} className='w-75' variant="contained" size='large'>Change Password</Button>
+                        <Button type='submit' sx={{backgroundColor:"black"}} className='w-75' variant="contained" size='large'>{t("changepassbutton")}</Button>
                     </div>
                 </form>
             </div>

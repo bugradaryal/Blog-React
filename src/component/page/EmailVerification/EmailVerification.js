@@ -3,9 +3,11 @@ import './EmailVerification.css';
 import Button from '@mui/material/Button';
 import { useNavigate, useLocation  } from 'react-router-dom'; 
 import axios from 'axios';
+import { useTranslation } from "react-i18next";
 const EmailVerification = () => {
     const navigate = useNavigate();
     const location = useLocation(); 
+    const { t } = useTranslation("emailtable");
     useEffect(()=>{
         const searchParams = new URLSearchParams(location.search); // URL'deki parametreleri çözümle
         const userId = searchParams.get('userId');
@@ -31,10 +33,10 @@ const EmailVerification = () => {
     return (
         <div className='verificationcontainer'>
             <div className='verificationbody'>
-                <b className='h2'>Verification Succesfull</b>
-                <p>Verification successful. You can log in to the website through the Login page.</p>
+                <b className='h2'>{t("verification")}</b>
+                <p>{t("verificationtext")}</p>
                 <div>
-                 <Button onClick={() => navigate('/Login')} variant="contained">Redirect to Login</Button>
+                 <Button onClick={() => navigate('/Login')} variant="contained">{t("redirectlogin")}</Button>
                 </div>
             </div>
         </div>

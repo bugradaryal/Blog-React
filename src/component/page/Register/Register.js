@@ -5,6 +5,7 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import BookIcon from '@mui/icons-material/Book';
 import axios from 'axios';
+import { useTranslation } from "react-i18next";
 
 const Register = () => {
     const [Name, setName] = useState(''); // `setname` yerine `setName` kullanıldı (standart isimlendirme).
@@ -17,7 +18,7 @@ const Register = () => {
     const [message, setmessage] = useState('');
     const confirmPasswordRef = useRef(); // Ref için düzgün bir isim kullanıldı.
     const navigate = useNavigate();
-
+    const { t } = useTranslation("registertable");
     const handleRegister = async (e) => {
         e.preventDefault();
         setmessage('');
@@ -86,7 +87,7 @@ const Register = () => {
             <form className='registerbody' onSubmit={handleRegister}>
                 <div className='registertitle'>
                     <BookIcon style={{ fontSize: '2.6rem' }} />
-                    <p className='h1'>Register</p>
+                    <p className='h1'>{t("register")}</p>
                     <hr style={{ height: "0px", border: "none", borderTop: "4px solid black", borderRadius: "3rem", width: "50%" }} />
                 </div>
                 <div className='registerinputs'>
@@ -96,7 +97,7 @@ const Register = () => {
                             type='text'
                             value={Name}
                             onChange={(e) => setName(e.target.value)}
-                            label="Name (Required)"
+                            label={t("name")}
                             variant="standard"
                             required
                         />
@@ -105,7 +106,7 @@ const Register = () => {
                             type='text'
                             value={Surname}
                             onChange={(e) => setSurname(e.target.value)}
-                            label="Surname (Required)"
+                            label={t("surname")}
                             variant="standard"
                             required
                         />
@@ -116,7 +117,7 @@ const Register = () => {
                             type='text'
                             value={UserName}
                             onChange={(e) => setUsername(e.target.value)}
-                            label="Username (Required)"
+                            label={t("username")}
                             variant="standard"
                             required
                         />
@@ -125,7 +126,7 @@ const Register = () => {
                             type='email'
                             value={Email}
                             onChange={(e) => setEmail(e.target.value)}
-                            label="Email (Required)"
+                            label={t("email")}
                             variant="standard"
                             required
                         />
@@ -136,7 +137,7 @@ const Register = () => {
                             type='tel'
                             value={PhoneNumber}
                             onChange={checkPhone}
-                            label="Phone Number"
+                            label={t("phonenum")}
                             variant="standard"
                             pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}"
                         />
@@ -145,7 +146,7 @@ const Register = () => {
                             type='text'
                             value={Address}
                             onChange={(e) => setAddress(e.target.value)}
-                            label="Address"
+                            label={t("address")}
                             variant="standard"
                         />
                     </div>
@@ -155,7 +156,7 @@ const Register = () => {
                             type='password'
                             value={Password}
                             onChange={(e) => setPassword(e.target.value)}
-                            label="Password (Required)"
+                            label={t("pass")}
                             variant="standard"
                             required
                         />
@@ -163,15 +164,15 @@ const Register = () => {
                             sx={{ width: "48%" }}
                             inputRef={confirmPasswordRef}
                             type='password'
-                            label="Confirm Password (Required)"
+                            label={t("confpass")}
                             variant="standard"
                             required
                         />
                     </div>
                 </div>
                 {message && <p className="error-message" style={{ color: 'red' }}>{message}</p>}
-                <Button sx={{backgroundColor:"black"}} className='loginbutton' type="submit" variant="contained">Register</Button>
-                <b>You have an account? <button onClick={() => navigate('/Login')} className='btn btn-link'>Login now</button></b>
+                <Button sx={{backgroundColor:"black"}} className='loginbutton' type="submit" variant="contained">{t("regbutton")}</Button>
+                <b>{t("registertext")} <button onClick={() => navigate('/Login')} className='btn btn-link'>{t("logintext")}</button></b>
             </form>
         </div>
     );

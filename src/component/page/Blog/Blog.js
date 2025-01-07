@@ -9,6 +9,7 @@ import Textarea from '@mui/joy/Textarea';
 import Button from '@mui/material/Button';
 import axios from 'axios';
 import CloseIcon from '@mui/icons-material/Close';
+import { useTranslation } from "react-i18next";
 const Blog = () => {
     const navigate = useNavigate();
     const location = useLocation();
@@ -108,7 +109,7 @@ const Blog = () => {
             console.error(error);
         }
     };
-
+    const { t } = useTranslation("blogtable");
     return (
         <div className='blogcontainer'>  
             <div className='blogbody'>
@@ -117,8 +118,8 @@ const Blog = () => {
                     <div className='flextitle'>
                         <b className='blogtitle h2'>{state.Post.Title}</b>
                         <div className='d-flex flex-column'>
-                            <p>Category: {state.Post.Category}</p>
-                            <p>Date: {state.Post.Date && !isNaN(new Date(state.Post.Date)) ? format(new Date(state.Post.Date), 'dd/MM/yyyy - hh:mm') : 'Invalid Date'}</p>
+                            <p>{t("category")}: {state.Post.Category}</p>
+                            <p>{t("date")}: {state.Post.Date && !isNaN(new Date(state.Post.Date)) ? format(new Date(state.Post.Date), 'dd/MM/yyyy - hh:mm') : 'Invalid Date'}</p>
                         </div>
                     </div>
                     <div className='blogimage'>
@@ -133,13 +134,13 @@ const Blog = () => {
                 <button disabled={state.UserId ? false : true} onClick={likedislike} style={{fontSize:"2.5rem",color:"black"}}><ThumbUpAltIcon style={{color: isLiked ? "#3B71CA" : "black", fontSize:"2.5rem"}}/>: <b style={{color: isLiked ? "#3B71CA" : "black" }}>{likecount}</b></button>
                 </div>
                 <div className='blogcomment'>
-                    <b className='h2'>Comments:</b>
+                    <b className='h2'>{t("comments")}:</b>
                     {Array.isArray(comments) ? comments.map(x => (<Comment key={x.id} userName={x.userName} content={x.content}/>)) : "No Comments!!"}
                 </div>
                 {state.UserId && (
                     <form className='writeblogcomment' onSubmit={writecoment}>
-                        <Textarea onChange={(e) => setcontent(e.target.value)} minRows={2} maxRows={4} name="Content" value={Content} placeholder="Type in here…" variant="outlined" />
-                        <Button type='submit' size="large" className='submitcomment' variant="outlined">Submit</Button>
+                        <Textarea onChange={(e) => setcontent(e.target.value)} minRows={2} maxRows={4} name="Content" value={Content} placeholder={t("commenttext")+"..."} variant="outlined" />
+                        <Button type='submit' size="large" className='submitcomment' variant="outlined">{t("commentbutton")}</Button>
                     </form>
                 )}
             </div>

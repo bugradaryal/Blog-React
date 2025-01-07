@@ -23,6 +23,7 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
+import { useTranslation } from "react-i18next";
 
 const PostManager = () => {
       const [pagenumber, setpagenumber] = useState(1);
@@ -195,6 +196,7 @@ const PostManager = () => {
         }
         return base64String;
     };
+    const { t } = useTranslation("admintable");
     return (
         <div className='postmanagercontainer'>
             <Modal
@@ -203,24 +205,24 @@ const PostManager = () => {
                 aria-labelledby="parent-modal-title"
                 aria-describedby="parent-modal-description">
                 <Box className="myupdatemodal">
-                <TextField inputProps={{ maxLength: 250 }} onChange={(e) => setSelectedData(prevData => ({ ...prevData, title: e.target.value }))} value={selectedData ? selectedData.title : ""} label="Title" variant="outlined" />
-                <TextField inputProps={{ maxLength: 1600 }} onChange={(e) => setSelectedData(prevData => ({ ...prevData, content: e.target.value }))} value={selectedData ? selectedData.content : ""} multiline minRows={3} maxRows={6} name="Content" label="Content" variant="outlined" />
+                <TextField inputProps={{ maxLength: 250 }} onChange={(e) => setSelectedData(prevData => ({ ...prevData, title: e.target.value }))} value={selectedData ? selectedData.title : ""} label={t("title")} variant="outlined" />
+                <TextField inputProps={{ maxLength: 1600 }} onChange={(e) => setSelectedData(prevData => ({ ...prevData, content: e.target.value }))} value={selectedData ? selectedData.content : ""} multiline minRows={3} maxRows={6} name="Content" label={t("content")} variant="outlined" />
                 <FormControl fullWidth variant="outlined" sx={{ width:"30%" }}>
-                <InputLabel id="demo-simple-select-label">Category</InputLabel>
+                <InputLabel id="demo-simple-select-label">{t("category")}</InputLabel>
                 <Select
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
                     value={selectedData.categories ? selectedData.categories.name : ""}
                     onChange={(e) => setSelectedData(prevData => ({ ...prevData, categories: {name: e.target.value }}))}
-                    label="Category" // Bu, InputLabel ile eşleşmeli
+                    label={t("category")} // Bu, InputLabel ile eşleşmeli
                 >
-                    <MenuItem value={"Personal"}>Personal</MenuItem>
-                    <MenuItem value={"Travel"}>Travel</MenuItem>
-                    <MenuItem value={"Lifestyle"}>Lifestyle</MenuItem>
-                    <MenuItem value={"News"}>News</MenuItem>
-                    <MenuItem value={"Marketing"}>Marketing</MenuItem>
-                    <MenuItem value={"Sports"}>Sports</MenuItem>
-                    <MenuItem value={"Movies"}>Movies</MenuItem>
+                    <MenuItem value={"Personal"}>{t("Personal")}</MenuItem>
+                    <MenuItem value={"Travel"}>{t("Travel")}</MenuItem>
+                    <MenuItem value={"Lifestyle"}>{t("Lifestyle")}</MenuItem>
+                    <MenuItem value={"News"}>{t("News")}</MenuItem>
+                    <MenuItem value={"Marketing"}>{t("Marketing")}</MenuItem>
+                    <MenuItem value={"Sports"}>{t("Sports")}</MenuItem>
+                    <MenuItem value={"Movies"}>{t("Movies")}</MenuItem>
                 </Select>
                 </FormControl>
                 <input onChange={handleImageChange} type="file" accept="image/*"/>
@@ -230,23 +232,23 @@ const PostManager = () => {
                     alt="Preview"
                     style={{ width: "20%", marginTop: "1rem" }}
                 />
-                ): "No İmage"}
-                <Button onClick={updatepost} sx={{backgroundColor:"black"}} className='w-25' variant="contained" size='large'>Update</Button>
+                ): t("noimage")}
+                <Button onClick={updatepost} sx={{backgroundColor:"black"}} className='w-25' variant="contained" size='large'>{t("updatebutton")}</Button>
                 </Box>
             </Modal>
             <div className='postmanagerbody'>
             <div className='managerheader'>
-                <Button onClick={(e) => navigate('/Admin/AddPost')} sx={{backgroundColor:"black", color:"white"}} size='large' variant="outlined">Add New Post</Button>
+                <Button onClick={(e) => navigate('/Admin/AddPost')} sx={{backgroundColor:"black", color:"white"}} size='large' variant="outlined">{t("addpostbutton")}</Button>
             </div>
             <TableContainer style={{backgroundColor:"transparent", padding:"2rem"}} className='postmanagertable' component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
                 <TableHead>
                 <TableRow>
-                    <TableCell align="left"><b>Post Id</b></TableCell>
-                    <TableCell align="left"><b>Title</b></TableCell>
-                    <TableCell align="left"><b>Date</b></TableCell>
-                    <TableCell align="left"><b>Category</b></TableCell>
-                    <TableCell align="right"><b>Actions-Etc</b></TableCell>
+                    <TableCell align="left"><b>PostId</b></TableCell>
+                    <TableCell align="left"><b>{t("title")}</b></TableCell>
+                    <TableCell align="left"><b>{t("date")}</b></TableCell>
+                    <TableCell align="left"><b>{t("category")}</b></TableCell>
+                    <TableCell align="right"><b>{t("actions")}</b></TableCell>
                 </TableRow>
                 </TableHead>
                     <TableBody>
@@ -262,12 +264,12 @@ const PostManager = () => {
                         <TableCell align="left">{row.date && !isNaN(new Date(row.date)) ? format(new Date(row.date), 'dd/MM/yyyy - hh:mm') : 'Invalid Date'}</TableCell>
                         <TableCell align="left">{row.categories.name}</TableCell>
                         <TableCell align="right" sx={{display:"flex",gap:"0.6rem"}}>
-                        <Button onClick={()=>handleeditOpen(row)} sx={{backgroundColor:"lightblue"}} size="small" variant="outlined">Edit</Button>
-                        <Button onClick={(e) => deletepost(e, row.id)} sx={{backgroundColor:"#ec5353"}} size="small" variant="outlined">Delete</Button> 
+                        <Button onClick={()=>handleeditOpen(row)} sx={{backgroundColor:"lightblue"}} size="small" variant="outlined">{t("manageredit")}</Button>
+                        <Button onClick={(e) => deletepost(e, row.id)} sx={{backgroundColor:"#ec5353"}} size="small" variant="outlined">{t("managerdelete")}</Button> 
                         <Button onClick={(e) => navigate('/Admin/ManageComments', {
                             state: {
                             Comments: row.comments,
-                        },})} sx={{backgroundColor:"whitesmoke"}} size="small" variant="outlined">Comments</Button>     
+                        },})} sx={{backgroundColor:"whitesmoke"}} size="small" variant="outlined">{t("managercomment")}</Button>     
                         </TableCell>              
                         </TableRow>
                     ))}

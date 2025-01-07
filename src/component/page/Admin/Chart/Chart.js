@@ -10,6 +10,7 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { DateField } from '@mui/x-date-pickers/DateField'; // DateField'ı import edin
 import validator from "validator";
 import Button from '@mui/material/Button';
+import { useTranslation } from "react-i18next";
 const Chart = () => {
     const navigate = useNavigate();
     const [poststat, setpoststat] = useState([]);
@@ -69,6 +70,7 @@ const getstatistic = async(e) => {
     useEffect(() => {
         getstatistic();
     }, []);
+    const { t } = useTranslation("admintable");
 
     return (
         <div className='chartcontainer'>
@@ -76,23 +78,23 @@ const getstatistic = async(e) => {
                 <form className="chartinputs" onSubmit={(e) => getstatistic(e)}>
                     <LocalizationProvider dateAdapter={AdapterDateFns}>
                         <DateField
-                            label="Select a Start Date"
+                            label={t("chartstartdate")}
                             value={startdate}
                             onChange={(e) => setstartdate(e)}
                             renderInput={(params) => <TextField {...params} />}
                         />
                         <DateField
-                            label="Select a End Date"
+                            label={t("chartenddate")}
                             value={enddate}
                             onChange={(e) => setenddate(e)}
                             renderInput={(params) => <TextField {...params} />}
                         />
-                        <Button type="submit" variant="contained">Filter</Button>
+                        <Button type="submit" variant="contained">{t("filterbutton")}</Button>
                     </LocalizationProvider>
                 </form>
                 <div className='chartflex'>
                     <div>
-                        <b>Post Count Per Mouth</b>
+                        <b>{t("postpermouth")}</b>
                         <LineChart
                             xAxis={[{ data: poststat.length > 0 ? poststat.map(item => item.month) : [] }]}
                             series={[
@@ -105,7 +107,7 @@ const getstatistic = async(e) => {
                         />
                     </div>
                     <div>
-                        <b>Message Count Per Mouth</b>
+                        <b>{t("messagepermouth")}</b>
                         <LineChart
                             xAxis={[{ data: commentstat.length > 0 ? commentstat.map(item => item.month) : [] }]}
                             series={[
@@ -120,7 +122,7 @@ const getstatistic = async(e) => {
                 </div>
                 <div className='chartflex'>
                     <div>
-                        <b>Like Count Per Mouth</b>
+                        <b>{t("likepermouth")}</b>
                         <LineChart
                             xAxis={[{ data: likestat.length > 0 ? likestat.map(item => item.month) : [] }]}
                             series={[
@@ -133,7 +135,7 @@ const getstatistic = async(e) => {
                         />
                     </div>
                     <div className='chartusercount'>
-                        <p className='counttext'> <PeopleIcon sx={{ fontSize: "3rem" }} /><b>UserCount: {usercount}</b></p>
+                        <p className='counttext'> <PeopleIcon sx={{ fontSize: "3rem" }} /><b>{t("usercount")}: {usercount}</b></p>
                     </div>
                 </div>
             </div>

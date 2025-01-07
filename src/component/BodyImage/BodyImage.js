@@ -3,18 +3,19 @@ import './BodyImage.css';
 import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
 import MessageIcon from '@mui/icons-material/Message';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from "react-i18next";
 
 const BodyImage = ({Post, UserId, UserName}) => {
     const navigate = useNavigate();
     const [isLiked, setIsLiked] = useState(false);
     const [image, setimage] = useState();
+    const { t } = useTranslation("bodyimagetable");
 
     const byteToImageUrl = (base64String) => {
         return `data:image/jpeg;base64,${base64String}`;
     };
 
     useEffect(() => {
-        console.log(Post)
         if(Post.Like && Post.Like.some(like => like.user_id === UserId)){
             setIsLiked(true);
         }
@@ -46,7 +47,7 @@ const BodyImage = ({Post, UserId, UserName}) => {
                         <p className='paragraph mt-3'>{Post.Content.substring(0,120)}</p>
                     </div>
                     <div>
-                        <button type="submit"  className="btn btn-primary readbutton">Read</button>
+                        <button type="submit"  className="btn btn-primary readbutton">{t("readbutton")}</button>
                     </div>
                     <div className='hr'></div>
                     <div className='likecomment'>

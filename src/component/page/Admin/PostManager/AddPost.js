@@ -9,6 +9,7 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
+import { useTranslation } from "react-i18next";
 
 const AddPost = () => {
     const [newpost,setnewpost] = useState({
@@ -66,28 +67,28 @@ const AddPost = () => {
         reader.readAsArrayBuffer(file); // Dosyayı ArrayBuffer olarak oku
         }
     };
-
+    const { t } = useTranslation("admintable");
     return (
         <div className='addpostcontainer'>
             <div className='addpostbody'>
-                <TextField inputProps={{ maxLength: 250 }} onChange={(e) => setnewpost(prevData => ({ ...prevData, Title: e.target.value }))} multiline minRows={2} maxRows={3} label="Title" variant="outlined" />
-                <TextField inputProps={{ maxLength: 1600 }} onChange={(e) => setnewpost(prevData => ({ ...prevData, Content: e.target.value }))} multiline minRows={6} maxRows={15} name="Content" label="Content" variant="outlined" />
+                <TextField inputProps={{ maxLength: 250 }} onChange={(e) => setnewpost(prevData => ({ ...prevData, Title: e.target.value }))} multiline minRows={2} maxRows={3} label={t("title")} variant="outlined" />
+                <TextField inputProps={{ maxLength: 1600 }} onChange={(e) => setnewpost(prevData => ({ ...prevData, Content: e.target.value }))} multiline minRows={6} maxRows={15} name="Content" label={t("content")} variant="outlined" />
                 <FormControl fullWidth variant="outlined" sx={{ width:"30%" }}>
-                <InputLabel id="demo-simple-select-label">Category</InputLabel>
+                <InputLabel id="demo-simple-select-label">{t("category")}</InputLabel>
                 <Select
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
                     value={newpost.Category}
                     onChange={(e) => setnewpost(prevData => ({ ...prevData, Category: e.target.value }))}
-                    label="Category" // Bu, InputLabel ile eşleşmeli
+                    label={t("category")} // Bu, InputLabel ile eşleşmeli
                 >
-                    <MenuItem value={"Personal"}>Personal</MenuItem>
-                    <MenuItem value={"Travel"}>Travel</MenuItem>
-                    <MenuItem value={"Lifestyle"}>Lifestyle</MenuItem>
-                    <MenuItem value={"News"}>News</MenuItem>
-                    <MenuItem value={"Marketing"}>Marketing</MenuItem>
-                    <MenuItem value={"Sports"}>Sports</MenuItem>
-                    <MenuItem value={"Movies"}>Movies</MenuItem>
+                    <MenuItem value={"Personal"}>{t("Personal")}</MenuItem>
+                    <MenuItem value={"Travel"}>{t("Travel")}</MenuItem>
+                    <MenuItem value={"Lifestyle"}>{t("Lifestyle")}</MenuItem>
+                    <MenuItem value={"News"}>{t("News")}</MenuItem>
+                    <MenuItem value={"Marketing"}>{t("Marketing")}</MenuItem>
+                    <MenuItem value={"Sports"}>{t("Sports")}</MenuItem>
+                    <MenuItem value={"Movies"}>{t("Movies")}</MenuItem>
                 </Select>
                 </FormControl>
                 <input onChange={handleImageChange} type="file" accept="image/*"/>
@@ -99,7 +100,7 @@ const AddPost = () => {
                 />
                 )}
                 <b className='text-danger'>{message}</b>
-                <Button onClick={addpost}  sx={{backgroundColor:"black"}} className='w-25' variant="contained" size='large'>Add Post</Button>
+                <Button onClick={addpost}  sx={{backgroundColor:"black"}} className='w-25' variant="contained" size='large'>{t("addpost")}</Button>
             </div>
         </div>
     );

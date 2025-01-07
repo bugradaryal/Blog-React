@@ -10,11 +10,13 @@ import PhoneAndroidIcon from '@mui/icons-material/PhoneAndroid';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import Link from '@mui/material/Link';
 
+import { useTranslation } from "react-i18next";
 function ContactUs(props) {
+    const { t } = useTranslation("contacttable");
     return (
         <div className='contactcontainer'>
             <div className='contactbody'>
-                <b className='h1'>Contact Us</b>
+                <b className='h1'>{t("contact")}</b>
                 <div className='contactcontent'>
                     <div className='contactcloums'>
                         <div>
@@ -36,7 +38,7 @@ function ContactUs(props) {
                     <div className='contacttext'>
                         <b className='h2'>MyBlog</b>
                         <p>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent id lorem ex. Nam facilisis mollis tortor id euismod. Aenean sollicitudin nibh ut nunc egestas, in lobortis leo venenatis. Quisque egestas id lacus sed semper. Sed id elit molestie, ultrices tortor id, pulvinar nulla. Morbi molestie laoreet sapien. Curabitur diam ante, pretium a molestie vitae, hendrerit a purus. Praesent a pharetra enim, ornare lobortis sem. Sed at justo odio. Donec non nisl ullamcorper mi dictum pharetra vel eget ligula. Nunc quis dui diam. Pellentesque mattis faucibus arcu euismod iaculis. Quisque suscipit ut nisl quis tristique. Mauris hendrerit, justo eget bibendum maximus, neque lacus consequat felis, non scelerisque est est sit amet nisl. Fusce a turpis molestie, fermentum nibh id, rutrum massa.
+                        {t("contacttext")}
                         </p>
                     </div>
                 </div>

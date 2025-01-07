@@ -11,6 +11,7 @@ import Comment from '../../../models/Comment';
 import { TextField } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { Category } from '@mui/icons-material';
+import { useTranslation } from "react-i18next";
 
 const HomePage = ({UserId, UserName}) => {
   const [post, setpost] = useState(new Post('', ''));
@@ -20,7 +21,7 @@ const HomePage = ({UserId, UserName}) => {
   const [holdpost, setholdpost] = useState([]);
   const [category, setcategory] = useState();
   const [isfilteder, setisfiltered] = useState(false);
-  
+  const { t } = useTranslation("homepagetable");
   useEffect(() => {
     PostDataAxios(1);
     axios.get("https://localhost:7197/api/Post/GetPostCounts").then(response => {
@@ -52,7 +53,6 @@ const HomePage = ({UserId, UserName}) => {
             Category
           );
         });
-        console.log(posts)
         setholdpost(posts);
         setpost(posts);
       }
@@ -166,11 +166,11 @@ const HomePage = ({UserId, UserName}) => {
         <div className='hometitle'>
           <div className='headercomponent'>
             <div className='headertitle'>
-              <p className='h2'>Discover Some Blogs</p>
+              <p className='h2'>{t("blog")}</p>
             </div>
             <form className='headerimputs' onSubmit={postsearchbytitle}>
               {
-              <TextField id="outlined-basic" onChange={(e) => setsearchvalue(e.target.value)} value={searchvalue} label="Search" variant="outlined" InputProps={{
+              <TextField id="outlined-basic" onChange={(e) => setsearchvalue(e.target.value)} value={searchvalue} label={t("search")} variant="outlined" InputProps={{
                 endAdornment: <Button type='submit' sx={{color:"black"}} variant="text"><SearchIcon/></Button>}}/>
             }
             </form>
@@ -178,14 +178,14 @@ const HomePage = ({UserId, UserName}) => {
         </div>
         <div className='mybody'> 
           <form className='categories' onSubmit={postbycategories}>
-          <Button sx={{color:"black"}} type='submit' onClick={(e)=>setcategory(e.target.value)} value="Default" variant="text">Default</Button>
-          <Button sx={{color:"black"}} type='submit' onClick={(e)=>setcategory(e.target.value)} value="Personal" variant="text">Personal</Button>
-          <Button sx={{color:"black"}} type='submit' onClick={(e)=>setcategory(e.target.value)} value="Travel" variant="text">Travel</Button>
-          <Button sx={{color:"black"}} type='submit' onClick={(e)=>setcategory(e.target.value)} value="Lifestyle" variant="text">Lifestyle</Button>
-          <Button sx={{color:"black"}} type='submit' onClick={(e)=>setcategory(e.target.value)} value="News" variant="text">News</Button>
-          <Button sx={{color:"black"}} type='submit' onClick={(e)=>setcategory(e.target.value)} value="Marketing" variant="text">Marketing</Button>
-          <Button sx={{color:"black"}} type='submit' onClick={(e)=>setcategory(e.target.value)}value="Sports"  variant="text">Sports</Button>
-          <Button sx={{color:"black"}} type='submit' onClick={(e)=>setcategory(e.target.value)} value="Movies"  variant="text">Movies</Button>
+          <Button sx={{color:"black"}} type='submit' onClick={(e)=>setcategory(e.target.value)} value="Default" variant="text">{t("Default")}</Button>
+          <Button sx={{color:"black"}} type='submit' onClick={(e)=>setcategory(e.target.value)} value="Personal" variant="text">{t("Personal")}</Button>
+          <Button sx={{color:"black"}} type='submit' onClick={(e)=>setcategory(e.target.value)} value="Travel" variant="text">{t("Travel")}</Button>
+          <Button sx={{color:"black"}} type='submit' onClick={(e)=>setcategory(e.target.value)} value="Lifestyle" variant="text">{t("Lifestyle")}</Button>
+          <Button sx={{color:"black"}} type='submit' onClick={(e)=>setcategory(e.target.value)} value="News" variant="text">{t("News")}</Button>
+          <Button sx={{color:"black"}} type='submit' onClick={(e)=>setcategory(e.target.value)} value="Marketing" variant="text">{t("Marketing")}</Button>
+          <Button sx={{color:"black"}} type='submit' onClick={(e)=>setcategory(e.target.value)}value="Sports"  variant="text">{t("Sports")}</Button>
+          <Button sx={{color:"black"}} type='submit' onClick={(e)=>setcategory(e.target.value)} value="Movies"  variant="text">{t("Movies")}</Button>
           </form>
           <div className='bodyblogcontenttcontainer'>
             {posts}

@@ -41,6 +41,12 @@ import PostManager from './component/page/Admin/PostManager/PostManager';
 import AddPost from './component/page/Admin/PostManager/AddPost';
 import Chart from './component/page/Admin/Chart/Chart';
 import ManageComments from './component/page/Admin/PostManager/ManageComments';
+import { useTranslation } from "react-i18next";
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+import {setSystemLanguage, getLocale} from './utils/LanguageUtils';
 
 function App() {
   const [user, setuser] = useState(new User('', ''));
@@ -50,7 +56,25 @@ function App() {
   const [open, setOpen] = useState(false); // 'setOpen' burada tanımlanır
   const [loading, setLoading] = useState(true);
   const [modalopen, setmodalopen] = useState(false);
+  const [langue,setlangue] = useState(getLocale());
+  const { t, i18n } = useTranslation("hometable");
 
+  const handleLanguageChange = (lng) => {
+    console.log(lng)
+    setSystemLanguage(lng);
+    setlangue(lng)
+    i18n.changeLanguage(lng);  // i18next ile dili değiştir
+    document.documentElement.setAttribute('lang', lng);  // HTML dilini güncelle
+  };
+  useEffect(() => {
+    const savedLanguage = getLocale();
+    console.log(savedLanguage)
+    if (savedLanguage) {
+      setlangue(savedLanguage)
+      setSystemLanguage(savedLanguage); // localStorage'den dil bilgisini set et
+      i18n.changeLanguage(savedLanguage); // i18next ile ilgili dili set et
+    }
+  }, []);
 
   function isTokenExpired(token) {
     try {
@@ -103,7 +127,9 @@ function App() {
   }
 
   useEffect(() => {
+
     setLoading(true);
+
           const token = localStorage.getItem("authorization"); 
           if(token){
             if(!isTokenExpired(token)){
@@ -227,7 +253,8 @@ function App() {
     handleClose();
     navigate('/Login');
   }
-  console.log(user)
+  
+
   return (
     <div className="App">
       <div className='myheader'>
@@ -235,6 +262,20 @@ function App() {
         <Drawer open={open} onClose={toggleDrawer(false)}>
           {DrawerList}
         </Drawer>
+        <div className='d-flex flex-row'>
+        <FormControl fullWidth size='small' sx={{alignSelf:"center"}}>
+        <InputLabel id="demo-simple-select-label">{t('Language')}</InputLabel>
+        <Select
+          labelId="demo-simple-select-label"
+          id="demo-simple-select"
+          value={langue}
+          label="Age"
+          onChange={(e) => handleLanguageChange(e.target.value)}
+        >
+          <MenuItem value={"tr"}>Türkçe</MenuItem>
+          <MenuItem value={"en"}>English</MenuItem>
+        </Select>
+      </FormControl>
         {
           user instanceof User && user.Id !== "" ?
           <div className='profile'>
@@ -245,6 +286,7 @@ function App() {
          </div>
          : ""
         }
+        </div>
       </div>
 
       <Modal
@@ -255,10 +297,10 @@ function App() {
       >
         <Box className="mymodal">
           <div>
-             <PersonIcon/><button onClick={()=>{navigate('/Account'); handleClose();}} className='h5 modalbutton'>My Account</button>
+             <PersonIcon/><button onClick={()=>{navigate('/Account'); handleClose();}} className='h5 modalbutton'>{t('Account')}</button>
           </div>
           <div>
-            <LogoutIcon/><button onClick={logout} className='h5 modalbutton'>Log Out</button>
+            <LogoutIcon/><button onClick={logout} className='h5 modalbutton'>{t('LogOut')}</button>
           </div>
         </Box>
       </Modal>
